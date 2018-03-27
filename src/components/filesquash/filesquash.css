@@ -62,11 +62,12 @@
   border-color: transparent;
   color: #a4a2a1;
   border-radius: 0;
-  padding: 14px;
+  padding: 10px;
   min-width: 0;
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   background: transparent;
+  cursor: pointer;
 }
 
 .filesquash-form {
