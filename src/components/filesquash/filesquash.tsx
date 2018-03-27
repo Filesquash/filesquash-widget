@@ -16,7 +16,12 @@ interface FileReaderEvent extends Event {
 })
 export class FilesquashWidget {
   @Event() uploadCompleted: EventEmitter;
+
   @Prop() token: string;
+  @Prop() buttonText: string = 'Browse files';
+  @Prop() labelText: string = 'Drag & drop any files';
+  @Prop() multiple: boolean = true;
+
   @State() modalVisible = false;
   @State() selectedFiles: Array<{ file: File, base64: string }> = [];
 
@@ -25,7 +30,7 @@ export class FilesquashWidget {
     this.modalVisible = !this.modalVisible;
   }
 
-  readURL(files: FileList) {
+  readFile(files: FileList) {
     if (files) {
       Array.from(files).forEach((file: File) => {
         const reader = new FileReader();
@@ -61,6 +66,7 @@ export class FilesquashWidget {
 
   upload(files, token) {
     const promises = files.map(({ file }) => this.sendFile(file, token));
+
     Promise.all(promises).then(res => {
       this.uploadCompleted.emit(res);
       this.toggleModal();
@@ -70,7 +76,7 @@ export class FilesquashWidget {
   render() {
     return (
       <div class="teste">
-        <button class="btn" onClick={this.toggleModal.bind(this)}>Browse files</button>
+        <button class="btn" onClick={this.toggleModal.bind(this)}>{this.buttonText}</button>
         {
           this.modalVisible && (
             <div class="modal" onClick={this.toggleModal.bind(this)}>
@@ -79,12 +85,10 @@ export class FilesquashWidget {
                   <svg viewBox="0 0 32 32" id="icon-close" width="100%" height="100%"><path d="M10.06 7.94a1.5 1.5 0 0 0-2.12 2.12L13.878 16l-5.94 5.94a1.5 1.5 0 0 0 2.122 2.12L16 18.122l5.94 5.94a1.5 1.5 0 0 0 2.12-2.122L18.122 16l5.94-5.94a1.5 1.5 0 0 0-2.122-2.12L16 13.878l-5.94-5.94z"></path></svg>
                 </button>
                 <div class="filesquash-form">
-                  <form method="post" enctype="multipart/form-data" action="">
-                    <label>
-                      Select your files
-                      <input type="file" class="file-upload" onChange={(e: any) => this.readURL(e.target.files)} multiple />
-                    </label>
-                  </form>
+                  <label>
+                    {this.labelText}
+                    <input type="file" class="file-upload" onChange={(e: any) => this.readFile(e.target.files)} multiple={this.multiple} />
+                  </label>
                 </div>
                 <div class="filesquash-preview">
                   {

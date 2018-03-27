@@ -26,6 +26,9 @@ declare global {
 
 declare global {
   interface HTMLFilesquashWidgetElement extends HTMLStencilElement {
+    'buttonText': string;
+    'labelText': string;
+    'multiple': boolean;
     'token': string;
   }
   var HTMLFilesquashWidgetElement: {
@@ -45,6 +48,9 @@ declare global {
   }
   namespace JSXElements {
     export interface FilesquashWidgetAttributes extends HTMLAttributes {
+      'buttonText'?: string;
+      'labelText'?: string;
+      'multiple'?: boolean;
       'onUploadCompleted'?: (event: CustomEvent) => void;
       'token'?: string;
     }
