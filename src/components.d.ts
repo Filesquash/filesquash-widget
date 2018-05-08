@@ -25,12 +25,65 @@ declare global {
 
 
 declare global {
-  interface HTMLFilesquashWidgetElement extends HTMLStencilElement {
-    'buttonText': string;
-    'labelText': string;
-    'multiple': boolean;
-    'token': string;
+
+  namespace StencilComponents {
+    interface FilesquashImg {
+      'alt': string;
+      'filters': string;
+      'projectId': string;
+      'size': string;
+      'src': string;
+    }
   }
+
+  interface HTMLFilesquashImgElement extends StencilComponents.FilesquashImg, HTMLStencilElement {}
+
+  var HTMLFilesquashImgElement: {
+    prototype: HTMLFilesquashImgElement;
+    new (): HTMLFilesquashImgElement;
+  };
+  interface HTMLElementTagNameMap {
+    'filesquash-img': HTMLFilesquashImgElement;
+  }
+  interface ElementTagNameMap {
+    'filesquash-img': HTMLFilesquashImgElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'filesquash-img': JSXElements.FilesquashImgAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface FilesquashImgAttributes extends HTMLAttributes {
+      'alt'?: string;
+      'filters'?: string;
+      'projectId'?: string;
+      'size'?: string;
+      'src'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface FilesquashWidget {
+      'buttonText': string;
+      'labelText': string;
+      'localFilesTitle': string;
+      'multiple': boolean;
+      'selectedFilePlaceholder': string;
+      'selectedFilesText': string;
+      'selectedPdfPlaceholder': string;
+      'selectedVideoPlaceholder': string;
+      'token': string;
+      'uploadButtonText': string;
+    }
+  }
+
+  interface HTMLFilesquashWidgetElement extends StencilComponents.FilesquashWidget, HTMLStencilElement {}
+
   var HTMLFilesquashWidgetElement: {
     prototype: HTMLFilesquashWidgetElement;
     new (): HTMLFilesquashWidgetElement;
@@ -50,9 +103,15 @@ declare global {
     export interface FilesquashWidgetAttributes extends HTMLAttributes {
       'buttonText'?: string;
       'labelText'?: string;
+      'localFilesTitle'?: string;
       'multiple'?: boolean;
       'onUploadCompleted'?: (event: CustomEvent) => void;
+      'selectedFilePlaceholder'?: string;
+      'selectedFilesText'?: string;
+      'selectedPdfPlaceholder'?: string;
+      'selectedVideoPlaceholder'?: string;
       'token'?: string;
+      'uploadButtonText'?: string;
     }
   }
 }

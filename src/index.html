@@ -4,12 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
+  <script src="https://revillweb.github.io/img-2/dist/img-2.js"></script>
   <script src="/build/filesquash.js"></script>
 
 </head>
 <body>
 
   <filesquash-widget token="YOUR_TOKEN" id="widget"></filesquash-widget>
+
+  <filesquash-img
+    src="https://cdn.stocksnap.io/img-thumbs/960w/QKW5BYR0Q2.jpg"
+    project-id="e6b0c7ca"
+    size="560x"
+    filters="blur=10;mirror=true"
+  ></filesquash-img>
+
+  <filesquash-img
+    src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
+    project-id="e6b0c7ca"
+    size="560x"
+    filters="grayscale=true"
+  ></filesquash-img>
 
   <script>
     const widget = document.getElementById('widget');

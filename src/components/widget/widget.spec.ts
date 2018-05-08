@@ -1,5 +1,5 @@
 import { render } from '@stencil/core/testing';
-import { FilesquashWidget } from './filesquash';
+import { FilesquashWidget } from './widget';
 
 describe('filesquash', () => {
   it('should build', () => {
