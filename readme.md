@@ -17,7 +17,7 @@ This is a pure web component with no dependencies for [Filesquash](https://files
 ```
   <filesquash-img
     src="https://cdn.stocksnap.io/img-thumbs/960w/QKW5BYR0Q2.jpg"
-    project-id="e6b0c7ca"
+    project-id="YOUR_PROJECT_ID"
     size="560x"
     filters="blur=10;mirror=true"
   ></filesquash-img>
