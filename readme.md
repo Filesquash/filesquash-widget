@@ -6,7 +6,7 @@ This is a pure web component with no dependencies for [Filesquash](https://files
 
 ### Example usage:
 
-```
+```html
   <filesquash-widget token="YOUR_TOKEN" id="widget"></filesquash-widget>
 ```
 
@@ -14,7 +14,7 @@ This is a pure web component with no dependencies for [Filesquash](https://files
 
 ### Example usage:
 
-```
+```html
   <filesquash-img
     src="https://cdn.stocksnap.io/img-thumbs/960w/QKW5BYR0Q2.jpg"
     project-id="YOUR_PROJECT_ID"
