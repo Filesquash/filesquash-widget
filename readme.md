@@ -27,10 +27,5 @@ This is a pure web component with no dependencies for [Filesquash](https://files
 
 ### Script tag
 
-- Put a script tag similar to this `<script src='https://unpkg.com/filesquash-widget@0.0.1/dist/filesquash.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
-
-### Node Modules
-- Run `npm install my-name --save`
-- Put a script tag similar to this `<script src='node_modules/filesquash-widget/dist/filesquash.js></script>` in the head of your index.html
+- Put a script tag similar to this `<script src='https://unpkg.com/filesquash-widget@0.0.4/dist/filesquash.js'></script>` in the head of your index.html
 - Then you can use the element anywhere in your template, JSX, html etc
