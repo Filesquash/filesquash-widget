@@ -80,7 +80,7 @@ export class FilesquashWidget {
   renderImagePreview(base64, filename, index) {
     return <div class="item-preview">
       <img class="image-preview" src={base64} alt={filename}/>
-      <button onClick={() => this.removeFile(index)}>X</button>
+      <button type="button" onClick={() => this.removeFile(index)}>X</button>
     </div>
   }
 
@@ -88,7 +88,7 @@ export class FilesquashWidget {
     return <div class="item-preview">
       <img class="icon" src={this[`selected${type}Placeholder`]} alt={filename}/>
       <p>{filename}</p>
-      <button onClick={() => this.removeFile(index)}>X</button>
+      <button type="button" onClick={() => this.removeFile(index)}>X</button>
     </div>
   }
 
@@ -102,13 +102,13 @@ export class FilesquashWidget {
   render() {
     return (
       <div class="filesquash-widget">
-        <button class="btn" onClick={this.toggleModal.bind(this)}>{this.buttonText}</button>
+        <button type="button" class="btn" onClick={this.toggleModal.bind(this)}>{this.buttonText}</button>
         {
           this.modalVisible && (
             <div class="modal" onClick={this.toggleModal.bind(this)}>
               <div class="modal-content" onClick={this.noop.bind(this)}>
                 <h2 class="title">{this.localFilesTitle}</h2>
-                <button class="btn-icon" onClick={this.toggleModal.bind(this)}>
+                <button type="button" class="btn-icon" onClick={this.toggleModal.bind(this)}>
                   <svg viewBox="0 0 32 32" id="icon-close" width="100%" height="100%"><path d="M10.06 7.94a1.5 1.5 0 0 0-2.12 2.12L13.878 16l-5.94 5.94a1.5 1.5 0 0 0 2.122 2.12L16 18.122l5.94 5.94a1.5 1.5 0 0 0 2.12-2.122L18.122 16l5.94-5.94a1.5 1.5 0 0 0-2.122-2.12L16 13.878l-5.94-5.94z"></path></svg>
                 </button>
                 <div class="filesquash-form">
@@ -125,7 +125,7 @@ export class FilesquashWidget {
                         this.selectedFiles.map((file, index) => this.renderFilePreview(file, index))
                       }
                     </div>,
-                    <button class="btn" onClick={() => this.upload(this.selectedFiles, this.token)}>{this.uploadButtonText}</button>
+                    <button type="button" class="btn" onClick={() => this.upload(this.selectedFiles, this.token)}>{this.uploadButtonText}</button>
                   ]
                 }
               </div>
