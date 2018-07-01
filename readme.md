@@ -4,10 +4,79 @@ This is a pure web component with no dependencies for [Filesquash](https://files
 
 ## Upload Widget
 
-### Example usage:
+### Vanilla example:
 
 ```html
   <filesquash-widget token="YOUR_TOKEN" id="widget"></filesquash-widget>
+```
+
+To get the Filesquash URI when upload is completed you should create an event listener as follows:
+
+```js
+  const widget = document.getElementById('widget');
+  widget.addEventListener(
+    'uploadCompleted',
+    data => console.log(data)
+  )
+```
+
+### React example:
+
+You'll need a wrapper:
+
+```js
+import React, { Component } from 'react'
+import kebabCase from 'lodash/kebabCase'
+
+export class UploadWidget extends Component {
+  constructor(props) {
+    super(props)
+
+    this.onUploadComplete = this.onUploadComplete.bind(this)
+  }
+
+  componentDidMount () {
+    this.component.addEventListener('uploadCompleted', this.onUploadComplete)
+  }
+
+  componentWillUnmount () {
+    this.component.removeEventListener('uploadCompleted', this.onUploadComplete)
+  }
+
+  onUploadComplete (data) {
+    this.props.onComplete(data)
+  }
+
+  _handleRef = (component) => {
+    this.component = component
+  };
+
+  render () {
+    const newProps = {
+      ...Object.keys(this.props).reduce((accumulator, key) => ({
+        ...accumulator,
+        [kebabCase(key)]: this.props[key]
+      }), {})
+    }
+    return (
+      <filesquash-widget
+        {...newProps}
+        ref={this._handleRef}
+        token={this.props.token}
+        id='widget' />
+    )
+  }
+}
+```
+
+Using the wrapper:
+
+```jsx
+  <UploadWidget
+    token={this.state.info.api_token}
+    onComplete={(data) => console.log(data)}
+    buttonText='Upload new files'
+  />
 ```
 
 ## Image Preview
