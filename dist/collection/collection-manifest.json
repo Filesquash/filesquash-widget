@@ -1,0 +1,138 @@
+{
+  "components": [
+    {
+      "tag": "filesquash-img",
+      "dependencies": [],
+      "componentClass": "MyComponent",
+      "componentPath": "components/img/img.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/img/img.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "alt",
+          "type": "String",
+          "attr": "alt"
+        },
+        {
+          "name": "filters",
+          "type": "String",
+          "attr": "filters"
+        },
+        {
+          "name": "projectId",
+          "type": "String",
+          "attr": "project-id",
+          "watch": [
+            "validateProjectId"
+          ]
+        },
+        {
+          "name": "size",
+          "type": "String",
+          "attr": "size"
+        },
+        {
+          "name": "src",
+          "type": "String",
+          "attr": "src",
+          "watch": [
+            "validateName"
+          ]
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      }
+    },
+    {
+      "tag": "filesquash-widget",
+      "dependencies": [],
+      "componentClass": "FilesquashWidget",
+      "componentPath": "components/widget/widget.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/widget/widget.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "buttonText",
+          "type": "String",
+          "attr": "button-text"
+        },
+        {
+          "name": "labelText",
+          "type": "String",
+          "attr": "label-text"
+        },
+        {
+          "name": "localFilesTitle",
+          "type": "String",
+          "attr": "local-files-title"
+        },
+        {
+          "name": "multiple",
+          "type": "Boolean",
+          "attr": "multiple"
+        },
+        {
+          "name": "selectedFilePlaceholder",
+          "type": "String",
+          "attr": "selected-file-placeholder"
+        },
+        {
+          "name": "selectedFilesText",
+          "type": "String",
+          "attr": "selected-files-text"
+        },
+        {
+          "name": "selectedPdfPlaceholder",
+          "type": "String",
+          "attr": "selected-pdf-placeholder"
+        },
+        {
+          "name": "selectedVideoPlaceholder",
+          "type": "String",
+          "attr": "selected-video-placeholder"
+        },
+        {
+          "name": "token",
+          "type": "String",
+          "attr": "token"
+        },
+        {
+          "name": "uploadButtonText",
+          "type": "String",
+          "attr": "upload-button-text"
+        }
+      ],
+      "states": [
+        {
+          "name": "modalVisible"
+        },
+        {
+          "name": "selectedFiles"
+        }
+      ],
+      "events": [
+        {
+          "event": "uploadCompleted"
+        }
+      ]
+    }
+  ],
+  "collections": [],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "0.8.0",
+    "typescriptVersion": "2.8.3"
+  },
+  "bundles": []
+}
