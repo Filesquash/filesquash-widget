@@ -28,6 +28,7 @@ filesquash-widget {
     overflow-y: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+    z-index: 9;
   }
 
   .modal-content {
