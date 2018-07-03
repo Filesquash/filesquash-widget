@@ -1,3 +1,7 @@
 filesquash-img {
   display: inline-block;
+
+  > img {
+    display: block;
+  }
 }
