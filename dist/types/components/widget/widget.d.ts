@@ -1,5 +1,4 @@
-import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
+import { EventEmitter } from '@stencil/core';
 export declare class FilesquashWidget {
     uploadCompleted: EventEmitter;
     token: string;
@@ -12,19 +11,7 @@ export declare class FilesquashWidget {
     selectedPdfPlaceholder: string;
     selectedVideoPlaceholder: string;
     selectedFilePlaceholder: string;
-    modalVisible: boolean;
-    selectedFiles: Array<{
-        file: File;
-        base64: string;
-    }>;
-    toggleModal(event?: UIEvent): void;
-    readFile(files: FileList): void;
-    removeFile(index: any): void;
-    noop(event: UIEvent): void;
-    sendFile(file: any, token: any): Promise<any>;
-    upload(files: any, token: any): void;
-    renderImagePreview(base64: any, filename: any, index: any): JSX.Element;
-    renderPlaceholder(type: any, filename: any, index: any): JSX.Element;
-    renderFilePreview(item: any, index: any): JSX.Element;
+    modal: any;
+    componentDidLoad(): void;
     render(): JSX.Element;
 }

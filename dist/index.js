@@ -1,0 +1,1 @@
+// filesquash: CommonJS Main

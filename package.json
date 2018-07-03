@@ -1,14 +1,14 @@
 {
   "name": "filesquash-widget",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "Stencil Component Starter",
-  "main": "dist/filesquash.js",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "files": [
     "dist/"
   ],
-  "browser": "dist/filesquash.js",
   "scripts": {
     "build": "stencil build",
     "dev": "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
@@ -18,11 +18,11 @@
     "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "@stencil/sass": "0.0.3",
+    "@stencil/sass": "0.0.5",
     "decko": "^1.2.0"
   },
   "devDependencies": {
-    "@stencil/core": "0.8.0",
+    "@stencil/core": "0.9.11",
     "@stencil/dev-server": "latest",
     "@stencil/utils": "latest",
     "@types/jest": "^21.1.1",

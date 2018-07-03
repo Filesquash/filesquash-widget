@@ -6,32 +6,66 @@
   <title>Stencil Component Starter</title>
   <script src="https://revillweb.github.io/img-2/dist/img-2.js"></script>
   <script src="/build/filesquash.js"></script>
-
 </head>
 <body>
 
-  <filesquash-widget token="YOUR_TOKEN" id="widget"></filesquash-widget>
+  <div>
+    <h2>Exemplo: filesquash-widget</h2>
+    <filesquash-widget token="YOUR_TOKEN" id="widget"></filesquash-widget>
+  </div>
 
-  <filesquash-img
-    src="https://cdn.stocksnap.io/img-thumbs/960w/QKW5BYR0Q2.jpg"
-    project-id="e6b0c7ca"
-    size="560x"
-    filters="blur=10;mirror=true"
-  ></filesquash-img>
+  <hr>
 
-  <filesquash-img
-    src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
-    project-id="e6b0c7ca"
-    size="560x"
-    filters="grayscale=true"
-  ></filesquash-img>
+  <div>
+    <h2>Exemplo: filesquash-modal</h2>
+    <button onclick="showModal()">Exibir modal</button>
+    <filesquash-modal token="YOUR_TOKEN" id="modal"></filesquash-modal>
+  </div>
+
+  <hr>
+
+  <div>
+    <h2>Exemplo: filesquash-img</h2>
+    <filesquash-img
+      src="https://cdn.stocksnap.io/img-thumbs/960w/QKW5BYR0Q2.jpg"
+      project-id="e6b0c7ca"
+      size="560x"
+      filters="blur=10;mirror=true"
+    ></filesquash-img>
+
+    <filesquash-img
+      src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
+      project-id="e6b0c7ca"
+      size="560x"
+      filters="grayscale=true"
+    ></filesquash-img>
+  </div>
 
   <script>
-    const widget = document.getElementById('widget');
-    widget.addEventListener(
+    // Exemplo: filesquash-widget
+    const widgetElm = document.querySelector('#widget');
+    widgetElm.componentOnReady()
+      .then(() => {
+        widgetElm.addEventListener(
+          'uploadCompleted',
+          console.log
+        )
+      });
+
+
+    // Exemplo: filesquash-modal
+    const modalElm = document.querySelector('#modal');
+    modalElm.addEventListener(
       'uploadCompleted',
       console.log
     )
+
+    function showModal() {
+      modalElm.componentOnReady()
+        .then(() => {
+          modalElm.toggleModal();
+        });
+    }
   </script>
 </body>
 </html>

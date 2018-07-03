@@ -50,8 +50,88 @@
       }
     },
     {
-      "tag": "filesquash-widget",
+      "tag": "filesquash-modal",
       "dependencies": [],
+      "componentClass": "FilesquashModal",
+      "componentPath": "components/modal/modal.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/modal/modal.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "labelText",
+          "type": "String",
+          "attr": "label-text"
+        },
+        {
+          "name": "localFilesTitle",
+          "type": "String",
+          "attr": "local-files-title"
+        },
+        {
+          "name": "multiple",
+          "type": "Boolean",
+          "attr": "multiple"
+        },
+        {
+          "name": "selectedFilePlaceholder",
+          "type": "String",
+          "attr": "selected-file-placeholder"
+        },
+        {
+          "name": "selectedFilesText",
+          "type": "String",
+          "attr": "selected-files-text"
+        },
+        {
+          "name": "selectedPdfPlaceholder",
+          "type": "String",
+          "attr": "selected-pdf-placeholder"
+        },
+        {
+          "name": "selectedVideoPlaceholder",
+          "type": "String",
+          "attr": "selected-video-placeholder"
+        },
+        {
+          "name": "token",
+          "type": "String",
+          "attr": "token"
+        },
+        {
+          "name": "uploadButtonText",
+          "type": "String",
+          "attr": "upload-button-text"
+        }
+      ],
+      "states": [
+        {
+          "name": "modalVisible"
+        },
+        {
+          "name": "selectedFiles"
+        }
+      ],
+      "methods": [
+        {
+          "name": "toggleModal"
+        }
+      ],
+      "events": [
+        {
+          "event": "uploadCompleted"
+        }
+      ]
+    },
+    {
+      "tag": "filesquash-widget",
+      "dependencies": [
+        "filesquash-modal"
+      ],
       "componentClass": "FilesquashWidget",
       "componentPath": "components/widget/widget.js",
       "styles": {
@@ -115,10 +195,7 @@
       ],
       "states": [
         {
-          "name": "modalVisible"
-        },
-        {
-          "name": "selectedFiles"
+          "name": "modal"
         }
       ],
       "events": [
@@ -131,8 +208,8 @@
   "collections": [],
   "compiler": {
     "name": "@stencil/core",
-    "version": "0.8.0",
-    "typescriptVersion": "2.8.3"
+    "version": "0.9.11",
+    "typescriptVersion": "2.9.2"
   },
   "bundles": []
 }

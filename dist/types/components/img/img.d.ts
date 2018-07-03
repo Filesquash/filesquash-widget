@@ -1,4 +1,3 @@
-import '../../stencil.core';
 export declare class MyComponent {
     el: HTMLElement;
     src: string;

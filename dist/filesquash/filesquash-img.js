@@ -1,10 +1,12 @@
-export class MyComponent {
+/*! Built with http://stenciljs.com */
+const { h } = window.filesquash;
+
+class MyComponent {
     validateName(newSrc) {
         const isBlank = typeof newSrc == null;
         if (isBlank) {
             throw new Error('src: required');
         }
-        ;
     }
     validateProjectId(newProjectId) {
         const isBlank = typeof newProjectId == null;
@@ -12,11 +14,9 @@ export class MyComponent {
         if (isBlank) {
             throw new Error('projectId: required');
         }
-        ;
         if (!has8chars) {
             throw new Error('projectId: invalid');
         }
-        ;
     }
     getFilters(filters, size) {
         const blacklistedValues = ['grayscale'];
@@ -85,5 +85,7 @@ export class MyComponent {
             "watchCallbacks": ["validateName"]
         }
     }; }
-    static get style() { return "/**style-placeholder:filesquash-img:**/"; }
+    static get style() { return "filesquash-img {\n  display: inline-block; }"; }
 }
+
+export { MyComponent as FilesquashImg };

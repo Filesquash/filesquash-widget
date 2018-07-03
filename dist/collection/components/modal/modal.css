@@ -1,5 +1,5 @@
-filesquash-widget {
-  display: inline;
+filesquash-modal {
+  display: block;
   /* .preview {
     display: inline-block;
     position: relative;
@@ -16,16 +16,16 @@ filesquash-widget {
       vertical-align: top;
     }
   } */ }
-  filesquash-widget *, filesquash-widget *::after, filesquash-widget *::before {
+  filesquash-modal *, filesquash-modal *::after, filesquash-modal *::before {
     -webkit-font-smoothing: antialiased;
     box-sizing: border-box;
     font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
     text-rendering: optimizeLegibility; }
-  filesquash-widget .widget {
+  filesquash-modal .widget {
     position: relative; }
-  filesquash-widget .modal {
+  filesquash-modal .modal {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -40,7 +40,7 @@ filesquash-widget {
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     z-index: 9; }
-  filesquash-widget .modal-content {
+  filesquash-modal .modal-content {
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -49,9 +49,9 @@ filesquash-widget {
     position: relative;
     width: 100%;
     max-width: 640px; }
-  filesquash-widget .title {
+  filesquash-modal .title {
     font-size: 16px; }
-  filesquash-widget .btn {
+  filesquash-modal .btn {
     background-color: #000;
     border: 0;
     border-radius: 5px;
@@ -64,10 +64,10 @@ filesquash-widget {
     text-align: center;
     text-decoration: none;
     text-transform: uppercase; }
-  filesquash-widget .btn:disabled {
+  filesquash-modal .btn:disabled {
     background-color: #777;
     cursor: not-allowed; }
-  filesquash-widget .btn-icon {
+  filesquash-modal .btn-icon {
     position: absolute;
     top: 0;
     right: 0;
@@ -81,16 +81,16 @@ filesquash-widget {
     height: 48px;
     background: transparent;
     cursor: pointer; }
-  filesquash-widget .filesquash-form {
+  filesquash-modal .filesquash-form {
     background: #ecf0f1;
     margin: 16px 0 0;
     min-width: 320px;
     padding: 32px;
     position: relative;
     white-space: initial; }
-  filesquash-widget .filesquash-form form {
+  filesquash-modal .filesquash-form form {
     text-align: center; }
-  filesquash-widget .filesquash-form .file-upload {
+  filesquash-modal .filesquash-form .file-upload {
     position: absolute;
     margin: 0;
     padding: 0;
@@ -101,12 +101,12 @@ filesquash-widget {
     cursor: pointer;
     top: 0;
     left: 0; }
-  filesquash-widget .filesquash-preview {
+  filesquash-modal .filesquash-preview {
     margin: 16px 0;
     white-space: initial; }
-    filesquash-widget .filesquash-preview > .title {
+    filesquash-modal .filesquash-preview > .title {
       margin-bottom: 16px; }
-  filesquash-widget .filesquash-preview .item-preview {
+  filesquash-modal .filesquash-preview .item-preview {
     float: left;
     margin: 4px;
     width: calc(50vw - 24px);
@@ -123,15 +123,15 @@ filesquash-widget {
     align-items: center;
     word-break: break-word; }
     @media only screen and (min-width: 640px) {
-      filesquash-widget .filesquash-preview .item-preview {
+      filesquash-modal .filesquash-preview .item-preview {
         max-width: 144px;
         max-height: 144px; } }
-    filesquash-widget .filesquash-preview .item-preview > .icon {
+    filesquash-modal .filesquash-preview .item-preview > .icon {
       margin: 4px;
       width: 36px; }
-    filesquash-widget .filesquash-preview .item-preview > .image-preview {
+    filesquash-modal .filesquash-preview .item-preview > .image-preview {
       max-height: 100%; }
-    filesquash-widget .filesquash-preview .item-preview > button {
+    filesquash-modal .filesquash-preview .item-preview > button {
       position: absolute;
       top: 0;
       right: 0;
