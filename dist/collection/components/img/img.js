@@ -1,3 +1,4 @@
+import compact from 'lodash/compact';
 import uniqBy from 'lodash/uniqBy';
 export class MyComponent {
     validateName(newSrc) {
@@ -22,7 +23,7 @@ export class MyComponent {
     getFilters(filters, size) {
         const blacklistedValues = ['grayscale'];
         const defaultFilters = ['quality=keep'];
-        const userFilters = filters.split(';');
+        const userFilters = compact(filters.split(';'));
         let processedFilters = `filters`;
         let crop = '';
         let mirror = '';
