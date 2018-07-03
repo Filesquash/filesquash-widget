@@ -47,7 +47,7 @@ export class MyComponent {
     }
     getImage(src, projectId, size, filters) {
         const uuidV4Checker = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i);
-        const hostedAssetChecker = new RegExp(/^(http|https):\/\/filesquash\.io\//i);
+        const hostedAssetChecker = new RegExp(/^(http|https):\/\/filesquash\.io\/[0-9A-Z]{8}\/assets\//i);
         const onlyUuid = uuidV4Checker.test(src);
         const hostedAsset = hostedAssetChecker.test(src);
         return hostedAsset || onlyUuid
