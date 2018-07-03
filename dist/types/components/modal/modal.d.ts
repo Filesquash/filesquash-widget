@@ -1,4 +1,5 @@
-import { EventEmitter } from '@stencil/core';
+import '../../stencil.core';
+import { EventEmitter } from '../../stencil.core';
 export declare class FilesquashModal {
     uploadCompleted: EventEmitter;
     token: string;

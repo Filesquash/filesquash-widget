@@ -1,3 +1,4 @@
+import '../../stencil.core';
 export declare class MyFlash {
     active: boolean;
     message: string;
