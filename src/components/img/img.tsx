@@ -46,7 +46,7 @@ export class MyComponent {
         mirror = value ? '-' : '';
       }
       else if (property === 'crop') {
-        crop = !!value ? value : '';
+        crop = !!value ? value + '/' : '';
       }
       else {
         processedFilters += `:${property}(${blacklistedValues.indexOf(property) === -1 ? value : ''})`;
