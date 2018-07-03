@@ -1,4 +1,5 @@
 import { Component, Element, Prop, Watch } from '@stencil/core';
+import uniqBy from 'lodash/uniqBy';
 
 @Component({
   tag: 'filesquash-img',
@@ -24,16 +25,20 @@ export class MyComponent {
     const isBlank = typeof newProjectId == null;
     const has8chars = typeof newProjectId === 'string' && newProjectId.length === 8;
     if (isBlank) { throw new Error('projectId: required') };
-    if ( !has8chars ) { throw new Error('projectId: invalid') };
+    if (!has8chars) { throw new Error('projectId: invalid') };
   }
 
   getFilters(filters, size) {
     const blacklistedValues = ['grayscale'];
-    let processedFilters = `filters:quality(100)`;
+    const defaultFilters = ['quality=keep'];
+    const userFilters = filters.split(';');
+    let processedFilters = `filters`;
     let crop = '';
     let mirror = '';
 
-    filters.split(";").forEach(filter => {
+    const uniqFilters = uniqBy([...userFilters, ...defaultFilters], (key) => key.replace(/=.*$/, ''));
+
+    uniqFilters.forEach(filter => {
       const [ property, value ] = filter.split('=');
 
       if (property === 'mirror') {

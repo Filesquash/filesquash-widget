@@ -88,7 +88,7 @@ Using the wrapper:
     src="https://cdn.stocksnap.io/img-thumbs/960w/QKW5BYR0Q2.jpg"
     project-id="YOUR_PROJECT_ID"
     size="560x"
-    filters="blur=10;mirror=true"
+    filters="filters:quality(keep);crop=130x120:830x608/"
   ></filesquash-img>
 ```
 

@@ -1,3 +1,4 @@
+import uniqBy from 'lodash/uniqBy';
 export class MyComponent {
     validateName(newSrc) {
         const isBlank = typeof newSrc == null;
@@ -20,10 +21,13 @@ export class MyComponent {
     }
     getFilters(filters, size) {
         const blacklistedValues = ['grayscale'];
-        let processedFilters = `filters:quality(100)`;
+        const defaultFilters = ['quality=keep'];
+        const userFilters = filters.split(';');
+        let processedFilters = `filters`;
         let crop = '';
         let mirror = '';
-        filters.split(";").forEach(filter => {
+        const uniqFilters = uniqBy([...userFilters, ...defaultFilters], (key) => key.replace(/=.*$/, ''));
+        uniqFilters.forEach(filter => {
             const [property, value] = filter.split('=');
             if (property === 'mirror') {
                 mirror = value ? '-' : '';
