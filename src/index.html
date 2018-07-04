@@ -52,12 +52,14 @@
         )
       });
 
+    document.addEventListener('filesquash:uploadStarted', function(e) { console.log('filesquash:uploadStarted') });
+    document.addEventListener('filesquash:uploadCompleted', function(e) { console.log('filesquash:uploadCompleted', e.detail) });
 
     // Exemplo: filesquash-modal
     const modalElm = document.querySelector('#modal');
     modalElm.addEventListener(
       'uploadCompleted',
-      console.log
+      e => console.log(e.detail)
     )
 
     function showModal() {

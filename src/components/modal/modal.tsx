@@ -1,5 +1,10 @@
 import { Component, Event, EventEmitter, Method, Prop, State } from '@stencil/core';
 
+const dispatchEvent = (eventName, detail = {}) => {
+  const event = new CustomEvent(eventName, { detail });
+  document.dispatchEvent(event);
+}
+
 @Component({
   tag: 'filesquash-modal',
   styleUrl: 'modal.scss'
@@ -52,26 +57,31 @@ export class FilesquashModal {
 
   sendFile(file, token) {
     const body = new FormData();
-      body.append('asset[file]', file);
+    body.append('asset[file]', file);
 
-      return fetch("https://filesquash.io/v1/assets",{
-        method: "POST",
-        body,
-        headers: {
-          Authorization: `Token token=${token}`
-        }
-      })
-      .then(function(res){
-        return res.json();
-      })
+    return fetch("https://filesquash.io/v1/assets",{
+      method: "POST",
+      body,
+      headers: {
+        Authorization: `Token token=${token}`
+      }
+    })
+    .then((res) => res.json())
   }
 
   upload(files, token) {
+    dispatchEvent("filesquash:uploadStarted");
+
     const promises = files.map(({ file }) => this.sendFile(file, token));
 
     Promise.all(promises).then(res => {
       this.selectedFiles = [];
       this.uploadCompleted.emit(res);
+
+      dispatchEvent("filesquash:uploadCompleted", {
+        files: res
+      });
+
       this.toggleModal();
     });
   }
