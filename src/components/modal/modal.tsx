@@ -1,8 +1,8 @@
-import { Component, Event, EventEmitter, Method, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Method, Prop, State } from '@stencil/core';
 
-const dispatchEvent = (eventName, detail = {}) => {
-  const event = new CustomEvent(eventName, { detail });
-  document.dispatchEvent(event);
+const dispatchEvent = (element, eventName, detail = null) => {
+  const event = new CustomEvent(eventName, { "bubbles": true, "cancelable": true, detail });
+  element.dispatchEvent(event);
 }
 
 @Component({
@@ -10,6 +10,8 @@ const dispatchEvent = (eventName, detail = {}) => {
   styleUrl: 'modal.scss'
 })
 export class FilesquashModal {
+  @Element() modalElement: HTMLElement;
+
   @Event() uploadCompleted: EventEmitter;
 
   @Prop() token: string;
@@ -70,7 +72,7 @@ export class FilesquashModal {
   }
 
   upload(files, token) {
-    dispatchEvent("filesquash:uploadStarted");
+    dispatchEvent(this.modalElement, "filesquash:uploadStarted");
 
     const promises = files.map(({ file }) => this.sendFile(file, token));
 
@@ -78,7 +80,7 @@ export class FilesquashModal {
       this.selectedFiles = [];
       this.uploadCompleted.emit(res);
 
-      dispatchEvent("filesquash:uploadCompleted", {
+      dispatchEvent(this.modalElement, "filesquash:uploadCompleted", {
         files: res
       });
 

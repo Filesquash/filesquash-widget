@@ -1,10 +1,17 @@
-import { Component, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Prop, State } from '@stencil/core';
+
+const dispatchEvent = (element, eventName, detail = null) => {
+  const event = new CustomEvent(eventName, { "bubbles": true, detail });
+  element.dispatchEvent(event);
+}
 
 @Component({
   tag: 'filesquash-widget',
   styleUrl: 'widget.scss'
 })
 export class FilesquashWidget {
+  @Element() widgetElement: HTMLElement;
+
   @Event() uploadCompleted: EventEmitter;
 
   @Prop() token: string;
@@ -27,7 +34,17 @@ export class FilesquashWidget {
       .then(() => {
         this.modal.addEventListener(
           'uploadCompleted',
-          res => this.uploadCompleted.emit(res.detail)
+          event => this.uploadCompleted.emit(event.detail)
+        )
+
+        this.modal.addEventListener(
+          "filesquash:uploadCompleted",
+          event =>  {
+            event.stopPropagation()
+            dispatchEvent(this.widgetElement, "filesquash:uploadCompleted", {
+              files: event.detail.files
+            })
+          }
         )
       });
     document.body.appendChild(this.modal)
