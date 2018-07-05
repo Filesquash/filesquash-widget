@@ -45,6 +45,11 @@ export class MyComponent {
     if (!has8chars) { throw new Error('projectId: invalid') };
   }
 
+  @Listen('window:orientationchange')
+  handleOrientationChange() {
+    this.debouncedloadBackgroundImage()
+  }
+
   @Listen('window:resize')
   handleResize() {
     this.debouncedloadBackgroundImage()
