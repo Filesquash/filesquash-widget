@@ -1,24 +1,40 @@
-import { Component, Element, Prop, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Listen, Prop, State, Watch } from '@stencil/core';
 import compact from 'lodash/compact';
+import debounce from 'lodash/debounce';
 import uniqBy from 'lodash/uniqBy';
+
+const BLANK_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8+f9vPQAJZAN2rlRQVAAAAABJRU5ErkJggg=='
 
 @Component({
   tag: 'filesquash-img',
   styleUrl: 'img.scss'
 })
 export class MyComponent {
-  @Element() el: HTMLElement;
+  @Element() hostElement: HTMLElement;
+
+  @Event() imageLoad: EventEmitter;
+  @Event() imageError: EventEmitter;
 
   @Prop() src: string;
   @Prop() projectId: string;
   @Prop() alt: string;
   @Prop() size: string;
   @Prop() filters: string;
+  @Prop() progressive: boolean = true;
+
+  @State() image: string = BLANK_PIXEL;
+
+  debouncedloadBackgroundImage = debounce(() => {
+    this.loadBackgroundImage(this.src).then(resultImage => (this.image = resultImage))
+  }, 1000)
 
   @Watch('src')
   validateName(newSrc: string,) {
     const isBlank = typeof newSrc == null;
-    if (isBlank) { throw new Error('src: required') };
+    if (isBlank) { throw new Error('src: required') }
+    else {
+      this.loadBackgroundImage(newSrc).then(resultImage => (this.image = resultImage));
+    }
   }
 
   @Watch('projectId')
@@ -27,6 +43,36 @@ export class MyComponent {
     const has8chars = typeof newProjectId === 'string' && newProjectId.length === 8;
     if (isBlank) { throw new Error('projectId: required') };
     if (!has8chars) { throw new Error('projectId: invalid') };
+  }
+
+  @Listen('window:resize')
+  handleResize() {
+    this.debouncedloadBackgroundImage()
+  }
+
+  componentDidLoad() {
+    if (this.progressive) {
+      this.getBlurryImage(this.src)
+        .then((resultImage) => {
+          this.image = resultImage;
+          return this.loadBackgroundImage(this.src)
+        })
+        .then(resultImage => (this.image = resultImage));
+    } else {
+      this.loadBackgroundImage(this.src)
+        .then(resultImage => (this.image = resultImage));
+    }
+  }
+
+  getImageSize(size) {
+    switch (size) {
+      case 'w_auto':
+      return `${(this.hostElement.parentNode as HTMLElement).offsetWidth}x`
+      case 'h_auto':
+      return `${(this.hostElement.parentNode as HTMLElement).offsetHeight}x`
+      default:
+      return size
+    }
   }
 
   getFilters(filters, size) {
@@ -53,7 +99,7 @@ export class MyComponent {
       }
     })
 
-    return `${size ? (crop + mirror + size) + '/': ''}${processedFilters}`;
+    return `${size ? (crop + mirror + this.getImageSize(size)) + '/': ''}${processedFilters}`;
   }
 
   processExternalImage(src, projectId, size, filters) {
@@ -66,7 +112,41 @@ export class MyComponent {
       : `${src}/${this.getFilters(filters, size)}/${encodeURIComponent(src)}`;
   }
 
-  getImage(src, projectId, size, filters) {
+  loadBackgroundImage(src) : Promise<string> {
+    return new Promise((resolve, reject) => {
+      const processedImage = this.getImage(src, this.projectId, this.size, this.filters)
+      let img = new Image();
+
+      img.onload = () => {
+        this.imageLoad.emit(processedImage)
+        resolve(processedImage)
+      }
+      img.onerror = (error) => {
+        this.imageError.emit(error)
+        reject()
+      }
+
+      img.src = processedImage;
+    })
+  }
+
+  getBlurryImage(src) : Promise<string> {
+    return new Promise((resolve, reject) => {
+      const userFilters = compact(this.filters.split(';'));
+      const blurryFilters = ['quality=50', 'blur=40'];
+      const uniqFilters = uniqBy([...blurryFilters, ...userFilters], (key) => key.replace(/=.*$/, ''));
+      const processedImage = this.getImage(src, this.projectId, this.size, uniqFilters.join(';'));
+
+      let img = new Image();
+
+      img.onload = () => resolve(processedImage)
+      img.onerror = () => reject()
+
+      img.src = processedImage;
+    })
+  }
+
+  getImage(src, projectId, size, filters) : string {
     const uuidV4Checker = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i);
     const hostedAssetChecker = new RegExp(/^(http|https):\/\/filesquash\.io\/[0-9A-Z]{8}\/assets\//i);
 
@@ -81,7 +161,7 @@ export class MyComponent {
   render() {
     return (
       <img
-        src={this.getImage(this.src, this.projectId, this.size, this.filters)}
+        src={this.image}
         alt={this.alt}
       />
     );

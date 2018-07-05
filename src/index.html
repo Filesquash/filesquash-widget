@@ -29,14 +29,16 @@
     <filesquash-img
       src="https://filesquash.io/static/myimage.jpg"
       project-id="e6b0c7ca"
-      size="560x"
+      size="w_auto"
       filters="blur=10;mirror=true"
+      id="image1"
     ></filesquash-img>
 
     <filesquash-img
       src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
       project-id="e6b0c7ca"
       size="560x"
+      progressive="false"
       filters="grayscale=true"
     ></filesquash-img>
   </div>
@@ -68,6 +70,16 @@
           modalElm.toggleModal();
         });
     }
+
+    // Exemplo: filesquash-img
+    const image1Elm = document.querySelector('#image1');
+    image1Elm.componentOnReady()
+      .then(() => {
+        image1Elm.addEventListener(
+          'imageLoad',
+          console.log
+        )
+      });
   </script>
 </body>
 </html>

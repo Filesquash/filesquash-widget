@@ -32,6 +32,7 @@ declare global {
     interface FilesquashImg {
       'alt': string;
       'filters': string;
+      'progressive': boolean;
       'projectId': string;
       'size': string;
       'src': string;
@@ -59,6 +60,9 @@ declare global {
     export interface FilesquashImgAttributes extends HTMLAttributes {
       'alt'?: string;
       'filters'?: string;
+      'onImageError'?: (event: CustomEvent) => void;
+      'onImageLoad'?: (event: CustomEvent) => void;
+      'progressive'?: boolean;
       'projectId'?: string;
       'size'?: string;
       'src'?: string;
