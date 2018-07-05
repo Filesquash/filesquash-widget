@@ -1,6 +1,6 @@
 import { Component, Element, Event, EventEmitter, Listen, Prop, State, Watch } from '@stencil/core';
 import compact from 'lodash/compact';
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 import uniqBy from 'lodash/uniqBy';
 
 const BLANK_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8+f9vPQAJZAN2rlRQVAAAAABJRU5ErkJggg=='
@@ -24,16 +24,12 @@ export class MyComponent {
 
   @State() image: string = BLANK_PIXEL;
 
-  debouncedloadBackgroundImage = debounce(() => {
-    this.loadBackgroundImage(this.src).then(resultImage => (this.image = resultImage))
-  }, 1000)
-
   @Watch('src')
   validateName(newSrc: string,) {
     const isBlank = typeof newSrc == null;
     if (isBlank) { throw new Error('src: required') }
     else {
-      this.loadBackgroundImage(newSrc).then(resultImage => (this.image = resultImage));
+      this.fetchImage(newSrc).then(resultImage => (this.image = resultImage));
     }
   }
 
@@ -47,26 +43,26 @@ export class MyComponent {
 
   @Listen('window:orientationchange')
   handleOrientationChange() {
-    this.debouncedloadBackgroundImage()
+    this.throttledFetchImage()
   }
 
   @Listen('window:resize')
   handleResize() {
-    this.debouncedloadBackgroundImage()
+    this.throttledFetchImage()
   }
 
+  throttledFetchImage = throttle(() => {
+    this.fetchImage(this.src).then(image => (this.image = image))
+  }, 1000)
+
   componentDidLoad() {
-    if (this.progressive) {
-      this.getBlurryImage(this.src)
-        .then((resultImage) => {
-          this.image = resultImage;
-          return this.loadBackgroundImage(this.src)
-        })
-        .then(resultImage => (this.image = resultImage));
-    } else {
-      this.loadBackgroundImage(this.src)
-        .then(resultImage => (this.image = resultImage));
-    }
+    (this.progressive ? this.getPlaceholderImage(this.src) : Promise.resolve(null))
+      .then(placeholderImage => {
+        if (placeholderImage) this.image = placeholderImage;
+
+        return this.fetchImage(this.src)
+      })
+      .then(image => (this.image = image))
   }
 
   getImageSize(size) {
@@ -117,7 +113,7 @@ export class MyComponent {
       : `${src}/${this.getFilters(filters, size)}/${encodeURIComponent(src)}`;
   }
 
-  loadBackgroundImage(src) : Promise<string> {
+  fetchImage(src) : Promise<string> {
     return new Promise((resolve, reject) => {
       const processedImage = this.getImage(src, this.projectId, this.size, this.filters)
       let img = new Image();
@@ -135,11 +131,11 @@ export class MyComponent {
     })
   }
 
-  getBlurryImage(src) : Promise<string> {
+  getPlaceholderImage(src) : Promise<string> {
     return new Promise((resolve, reject) => {
       const userFilters = compact(this.filters.split(';'));
-      const blurryFilters = ['quality=50', 'blur=40'];
-      const uniqFilters = uniqBy([...blurryFilters, ...userFilters], (key) => key.replace(/=.*$/, ''));
+      const placeholderFilters = ['quality=50', 'blur=40'];
+      const uniqFilters = uniqBy([...placeholderFilters, ...userFilters], (key) => key.replace(/=.*$/, ''));
       const processedImage = this.getImage(src, this.projectId, this.size, uniqFilters.join(';'));
 
       let img = new Image();
