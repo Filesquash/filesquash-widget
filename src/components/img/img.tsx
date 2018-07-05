@@ -72,9 +72,9 @@ export class MyComponent {
   getImageSize(size) {
     switch (size) {
       case 'w_auto':
-      return `${(this.hostElement.parentNode as HTMLElement).offsetWidth}x`
+      return `${(this.hostElement.parentNode as HTMLElement).clientWidth}x`
       case 'h_auto':
-      return `${(this.hostElement.parentNode as HTMLElement).offsetHeight}x`
+      return `${(this.hostElement.parentNode as HTMLElement).clientHeight}x`
       default:
       return size
     }
