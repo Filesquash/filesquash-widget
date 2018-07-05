@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, Listen, Prop, State, Watch } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Listen, Method, Prop, State, Watch } from '@stencil/core';
 import compact from 'lodash/compact';
 import throttle from 'lodash/throttle';
 import uniqBy from 'lodash/uniqBy';
@@ -51,8 +51,13 @@ export class MyComponent {
     this.throttledFetchImage()
   }
 
-  throttledFetchImage = throttle(() => {
+  @Method()
+  reload() {
     this.fetchImage(this.src).then(image => (this.image = image))
+  }
+
+  throttledFetchImage = throttle(() => {
+    this.reload()
   }, 1000)
 
   componentDidLoad() {

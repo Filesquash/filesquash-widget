@@ -34,6 +34,7 @@ declare global {
       'filters': string;
       'progressive': boolean;
       'projectId': string;
+      'reload': () => void;
       'size': string;
       'src': string;
     }
