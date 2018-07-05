@@ -41,6 +41,12 @@ export class MyComponent {
     if (!has8chars) { throw new Error('projectId: invalid') };
   }
 
+  @Watch('filters')
+  watchForFilterChanges(newFilters) {
+    const processedImage = this.getImage(this.src, this.projectId, this.size, newFilters)
+    this.fetchImage(processedImage).then(image => (this.image = image))
+  }
+
   @Listen('window:orientationchange')
   handleOrientationChange() {
     this.throttledFetchImage()
@@ -53,7 +59,8 @@ export class MyComponent {
 
   @Method()
   reload() {
-    this.fetchImage(this.src).then(image => (this.image = image))
+    const processedImage = this.getImage(this.src, this.projectId, this.size, this.filters)
+    this.fetchImage(processedImage).then(image => (this.image = image))
   }
 
   throttledFetchImage = throttle(() => {
@@ -65,7 +72,8 @@ export class MyComponent {
       .then(placeholderImage => {
         if (placeholderImage) this.image = placeholderImage;
 
-        return this.fetchImage(this.src)
+        const processedImage = this.getImage(this.src, this.projectId, this.size, this.filters)
+        return this.fetchImage(processedImage)
       })
       .then(image => (this.image = image))
   }
@@ -120,19 +128,18 @@ export class MyComponent {
 
   fetchImage(src) : Promise<string> {
     return new Promise((resolve, reject) => {
-      const processedImage = this.getImage(src, this.projectId, this.size, this.filters)
       let img = new Image();
 
       img.onload = () => {
-        this.imageLoad.emit(processedImage)
-        resolve(processedImage)
+        this.imageLoad.emit(src)
+        resolve(src)
       }
       img.onerror = (error) => {
         this.imageError.emit(error)
         reject()
       }
 
-      img.src = processedImage;
+      img.src = src;
     })
   }
 
