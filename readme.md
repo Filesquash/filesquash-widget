@@ -14,7 +14,7 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
     token: '[seu token]'
   }
 </script>
-<script src='https://unpkg.com/filesquash-widget@0.3.0/dist/filesquash.js'></script>
+<script src='https://unpkg.com/filesquash-widget@0.3.1/dist/filesquash.js'></script>
 ```
 - Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
 
@@ -148,7 +148,7 @@ export class UploadWidget extends Component {
         [kebabCase(key)]: this.props[key]
       }), {})
     }
-    
+
     return (
       <filesquash-widget
         {...newProps}
