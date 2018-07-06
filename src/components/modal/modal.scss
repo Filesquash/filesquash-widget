@@ -1,3 +1,7 @@
+body.filesquash-modal-open {
+  overflow: hidden;
+}
+
 filesquash-modal {
   display: block;
 
@@ -18,7 +22,7 @@ filesquash-modal {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: fixed;
+    position: absolute;
     top: 0;
     width: 100%;
     min-height: 100%;

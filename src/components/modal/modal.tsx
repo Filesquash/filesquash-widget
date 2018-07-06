@@ -32,6 +32,12 @@ export class FilesquashModal {
   @Method()
   toggleModal(): void {
     this.modalVisible = !this.modalVisible;
+
+    if (this.modalVisible) {
+      document.querySelector('body').classList.add('filesquash-modal-open');
+    } else {
+      document.querySelector('body').classList.remove('filesquash-modal-open');
+    }
   }
 
   readFile(files: FileList) {
