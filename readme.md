@@ -1,28 +1,103 @@
-# Filesquash Components 😍
+# Componentes do Filesquash
+Este é um conjunto de web componentes criados para interagir com a API do [Filesquash](https://filesquash.io). 
 
-This is a pure web component with no dependencies for [Filesquash](https://filesquash.io). It is built using [StencilJS](https://stenciljs.com).
+## Instalação
 
-## Upload Widget
+### Via tag <script>
 
-### Vanilla example:
+- Adicione a tag  `<script src='https://unpkg.com/filesquash-widget@0.2.3/dist/filesquash.js'></script>` no <head> do seu index.html
+- Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
+
+### NPM
+
+- Rode `npm install filesquash-widget --save`
+- Adicione uma tag script similar a `<script src='node_modules/filesquash-widget/dist/filesquash.js'></script>` o <head> do seu index.html
+- Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
+
+---
+
+## Widget de imagens
+O widget de imagens do Filesquash permite que você tenha imagens automaticamente responsiveis em seu site com o mínimo de esforço possível. Além disso, também é possível aplicar uma grande quantidade de efeitos efeitos, como blur, grayscale, watermark, etc..
+
+### Exemplo:
 
 ```html
-  <filesquash-widget token="YOUR_TOKEN" id="widget"></filesquash-widget>
+  <filesquash-img
+    src="https://mysite.com/images/image.jpg"
+    project-id="YOUR_PROJECT_ID"
+  ></filesquash-img>
 ```
 
-To get the Filesquash URI when upload is completed you should create an event listener as follows:
+### Opções
+
+| Atributo | Valor padrão | Valores possíveis | Descrição |
+|---|:-:|:-:|---|
+| **project-id**  | | | Este atributo define o identificador único do seu projeto no Filesquash. <br /> **Atributo é obrigatório**. |
+| **src**  | | | Este atributo define o endereço URL da imagem ou identificador único de imagem no Filesquash. <br /> **Esse atributo é obrigatório**. |
+| **alt**  | | |  Este atributo define um texto alternativo que descreve a imagem. <br /> **Atributo é obrigatório**. |
+| **size** | `"w_auto"` | `"default"`, `"h_auto"`, `"w_auto"` e [mais](https://filesquash.gitbook.io/docs/) |  Este atributo define especifica o tamanho desejado da imagem. |
+| **filters** | | [Mais informações](https://filesquash.gitbook.io/docs/) | Este atributo define os filtros que serão aplicados a imagem. |
+| **progressive** | `true` | `true` ou `false` | Este atributo define se a imagem será carregada de forma progressiva usando placeholder de baixa resolução (LQIP). |
+
+---
+
+## Widget de Upload
+
+### Javascript (vanilla):
+
+```html
+  <filesquash-widget token="SEU_TOKEN" id="widget"></filesquash-widget>
+```
+
+Para receber a URL de seu arquivo após o upload você deverá criar um listener para o evento `uploadCompleted`:
 
 ```js
-  const widget = document.getElementById('widget');
+  const widget = document.querySelector('widget');
   widget.addEventListener(
     'uploadCompleted',
     data => console.log(data)
   )
 ```
 
-### React example:
+Alternativamente você também pode escutar pelo evento `filesquash:uploadStarted` no `document`
 
-You'll need a wrapper:
+```js
+document.addEventListener('filesquash:uploadCompleted', () => {
+	console.log('filesquash:uploadStarted')
+});
+```
+
+Caso queira acionar programaticamente o widget de upload do Filesquash, utilize o `<filesquash-modal>` e chame o método `toggleModal()` para exibir ou esconder o widget.
+
+```html
+<button onclick="showModal()">Exibir modal</button>
+<filesquash-modal token="YOUR_TOKEN" id="modal"></filesquash-modal>
+
+<script>
+  const modalElm = document.querySelector('#modal');
+
+  function showModal() {
+    modalElm.componentOnReady()
+      .then(() => {
+        modalElm.toggleModal();
+      });
+  }
+</script>
+```
+
+### Opções
+
+| Atributo | Valor padrão | Descrição |
+|---|:-:|---|
+| **token**  | | Este atributo define o token do seu projeto no Filesquash. <br /> **Atributo é obrigatório**. |
+| **multiple**  | `false` | Este atributo define se o usuário pode selecionar mais de um arquivo de forma simultânea. |
+| **button-text**  | `"Selecionar arquivos"` | Este atributo define o texto do botão de abertura do modal do widget. |
+| **label-text**  | `"Arraste/solte seu arquivo aqui."` | Este atributo define o texto da caixa de seleção de arquivos do widget. |
+| **upload-button-text**  | `"Enviar"` | Este atributo define o texto do botão que realiza o upload dos arquivos do widget. |
+
+### Utilizando o widget de upload com o React:
+
+Para usar o widget de upload no React você precisará criar um wrapper como o apresenta a seguir.
 
 ```js
 import React, { Component } from 'react'
@@ -69,7 +144,7 @@ export class UploadWidget extends Component {
 }
 ```
 
-Using the wrapper:
+Usando o wrapper:
 
 ```jsx
   <UploadWidget
@@ -79,22 +154,4 @@ Using the wrapper:
   />
 ```
 
-## Image Preview
-
-### Example usage:
-
-```html
-  <filesquash-img
-    src="https://cdn.stocksnap.io/img-thumbs/960w/QKW5BYR0Q2.jpg"
-    project-id="YOUR_PROJECT_ID"
-    size="560x"
-    filters="filters:quality(keep);crop=130x120:830x608/"
-  ></filesquash-img>
-```
-
-## Using this component
-
-### Script tag
-
-- Put a script tag similar to this `<script src='https://unpkg.com/filesquash-widget@0.1.5/dist/filesquash.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
+ps.:  Em breve disponibilizaremos esse wrapper como um pacote no NPM.
