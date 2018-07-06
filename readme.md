@@ -110,7 +110,7 @@ Caso queira acionar programaticamente o widget de upload do Filesquash, utilize 
 
 ### Utilizando o widget de upload com o React:
 
-Para usar o widget de upload no React você precisará criar um wrapper como o apresenta a seguir.
+Para usar o widget de upload no React você precisará criar um wrapper como o apresentado a seguir.
 
 ```js
 import React, { Component } from 'react'
