@@ -33,7 +33,7 @@ declare global {
       'alt': string;
       'filters': string;
       'progressive': boolean;
-      'reload': () => void;
+      'reload': () => Promise<void>;
       'size': string;
       'src': string;
     }

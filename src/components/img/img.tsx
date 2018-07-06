@@ -4,6 +4,13 @@ import throttle from 'lodash/throttle';
 import uniqBy from 'lodash/uniqBy';
 
 const BLANK_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8+f9vPQAJZAN2rlRQVAAAAABJRU5ErkJggg=='
+async function supportsWebp() {
+  if (!self.createImageBitmap) return false;
+
+  const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+  const blob = await fetch(webpData).then(r => r.blob());
+  return createImageBitmap(blob).then(() => true, () => false);
+}
 
 @Component({
   tag: 'filesquash-img',
@@ -34,8 +41,8 @@ export class MyComponent {
   }
 
   @Watch('filters')
-  watchForFilterChanges(newFilters) {
-    const processedImage = this.getImage(this.src, this.filesquashConfig.projectId, this.size, newFilters)
+  async watchForFilterChanges(newFilters) {
+    const processedImage = await this.getImage(this.src, this.filesquashConfig.projectId, this.size, newFilters)
     this.fetchImage(processedImage).then(image => (this.image = image))
   }
 
@@ -54,8 +61,8 @@ export class MyComponent {
   }
 
   @Method()
-  reload() {
-    const processedImage = this.getImage(this.src, this.filesquashConfig.projectId, this.size, this.filters)
+  async reload() {
+    const processedImage = await this.getImage(this.src, this.filesquashConfig.projectId, this.size, this.filters)
     this.fetchImage(processedImage).then(image => (this.image = image))
   }
 
@@ -65,10 +72,10 @@ export class MyComponent {
 
   componentDidLoad() {
     (this.progressive ? this.getPlaceholderImage(this.src) : Promise.resolve(null))
-      .then(placeholderImage => {
+      .then(async placeholderImage => {
         if (placeholderImage) this.image = placeholderImage;
 
-        const processedImage = this.getImage(this.src, this.filesquashConfig.projectId, this.size, this.filters)
+        const processedImage = await this.getImage(this.src, this.filesquashConfig.projectId, this.size, this.filters)
         return this.fetchImage(processedImage)
       })
       .then(image => (this.image = image))
@@ -87,7 +94,7 @@ export class MyComponent {
     }
   }
 
-  getFilters(filters, size) {
+  async getFilters(filters, size) {
     const blacklistedValues = ['grayscale'];
     const defaultFilters = ['quality=keep'];
     const userFilters = compact(filters.split(';'));
@@ -95,6 +102,10 @@ export class MyComponent {
     let processedFilters = `filters`;
     let crop = '';
     let mirror = '';
+
+    if(await supportsWebp()) {
+      defaultFilters.push('format=webp')
+    }
 
     const uniqFilters = uniqBy([...userFilters, ...defaultFilters], (key) => key.replace(/=.*$/, ''));
 
@@ -115,13 +126,13 @@ export class MyComponent {
     return `${sizeToApply ? (crop + mirror + sizeToApply) + '/': ''}${processedFilters}`;
   }
 
-  processExternalImage(src, projectId, size, filters) {
-    return `https://filesquash.io/v1/${projectId}/process/${this.getFilters(filters, size)}/${encodeURIComponent(src)}`;
+  async processExternalImage(src, projectId, size, filters) {
+    return `https://filesquash.io/v1/${projectId}/process/${await this.getFilters(filters, size)}/${encodeURIComponent(src)}`;
   }
 
-  processHostedImage(src, projectId, size, filters, onlyUuid) {
+  async processHostedImage(src, projectId, size, filters, onlyUuid) {
     return onlyUuid
-      ? `https://filesquash.io/v1/${projectId}/assets/${src}/${this.getFilters(filters, size)}`
+      ? `https://filesquash.io/v1/${projectId}/assets/${src}/${await this.getFilters(filters, size)}`
       : `${src}/${this.getFilters(filters, size)}/${encodeURIComponent(src)}`;
   }
 
@@ -143,11 +154,12 @@ export class MyComponent {
   }
 
   getPlaceholderImage(src) : Promise<string> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const userFilters = compact(this.filters.split(';'));
       const placeholderFilters = ['quality=50', 'blur=40'];
+
       const uniqFilters = uniqBy([...placeholderFilters, ...userFilters], (key) => key.replace(/=.*$/, ''));
-      const processedImage = this.getImage(src, this.filesquashConfig.projectId, this.size, uniqFilters.join(';'));
+      const processedImage = await this.getImage(src, this.filesquashConfig.projectId, this.size, uniqFilters.join(';'));
 
       let img = new Image();
 
@@ -158,7 +170,7 @@ export class MyComponent {
     })
   }
 
-  getImage(src, projectId, size, filters) : string {
+  async getImage(src, projectId, size, filters) : Promise<string> {
     const uuidV4Checker = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i);
     const hostedAssetChecker = new RegExp(/^(http|https):\/\/filesquash\.io\/[0-9A-Z]{8}\/assets\//i);
 
@@ -166,8 +178,8 @@ export class MyComponent {
     const hostedAsset = hostedAssetChecker.test(src);
 
     return hostedAsset || onlyUuid
-      ? this.processHostedImage(src, projectId, size, filters, onlyUuid)
-      : this.processExternalImage(src, projectId, size, filters);
+      ? await this.processHostedImage(src, projectId, size, filters, onlyUuid)
+      : await this.processExternalImage(src, projectId, size, filters);
   }
 
   render() {
