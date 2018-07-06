@@ -5,7 +5,7 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
 
 ### Via tag <script>
 
-- Adicione a tag  `<script src='https://unpkg.com/filesquash-widget@0.2.3/dist/filesquash.js'></script>` no <head> do seu index.html
+- Adicione a tag  `<script src='https://unpkg.com/filesquash-widget@0.2.4/dist/filesquash.js'></script>` no <head> do seu index.html
 - Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
 
 ### NPM
