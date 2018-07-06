@@ -16,11 +16,11 @@ export class MyComponent {
   @Event() imageError: EventEmitter;
 
   @Prop() src: string;
-  @Prop() projectId: string;
   @Prop() alt: string;
   @Prop() size: string = "w_auto";
   @Prop() filters: string;
   @Prop() progressive: boolean = true;
+  @Prop({ context: 'filesquashConfig' }) private filesquashConfig: any;
 
   @State() image: string = BLANK_PIXEL;
 
@@ -33,17 +33,9 @@ export class MyComponent {
     }
   }
 
-  @Watch('projectId')
-  validateProjectId(newProjectId: string,) {
-    const isBlank = typeof newProjectId == null;
-    const has8chars = typeof newProjectId === 'string' && newProjectId.length === 8;
-    if (isBlank) { throw new Error('projectId: required') };
-    if (!has8chars) { throw new Error('projectId: invalid') };
-  }
-
   @Watch('filters')
   watchForFilterChanges(newFilters) {
-    const processedImage = this.getImage(this.src, this.projectId, this.size, newFilters)
+    const processedImage = this.getImage(this.src, this.filesquashConfig.projectId, this.size, newFilters)
     this.fetchImage(processedImage).then(image => (this.image = image))
   }
 
@@ -63,7 +55,7 @@ export class MyComponent {
 
   @Method()
   reload() {
-    const processedImage = this.getImage(this.src, this.projectId, this.size, this.filters)
+    const processedImage = this.getImage(this.src, this.filesquashConfig.projectId, this.size, this.filters)
     this.fetchImage(processedImage).then(image => (this.image = image))
   }
 
@@ -76,7 +68,7 @@ export class MyComponent {
       .then(placeholderImage => {
         if (placeholderImage) this.image = placeholderImage;
 
-        const processedImage = this.getImage(this.src, this.projectId, this.size, this.filters)
+        const processedImage = this.getImage(this.src, this.filesquashConfig.projectId, this.size, this.filters)
         return this.fetchImage(processedImage)
       })
       .then(image => (this.image = image))
@@ -155,7 +147,7 @@ export class MyComponent {
       const userFilters = compact(this.filters.split(';'));
       const placeholderFilters = ['quality=50', 'blur=40'];
       const uniqFilters = uniqBy([...placeholderFilters, ...userFilters], (key) => key.replace(/=.*$/, ''));
-      const processedImage = this.getImage(src, this.projectId, this.size, uniqFilters.join(';'));
+      const processedImage = this.getImage(src, this.filesquashConfig.projectId, this.size, uniqFilters.join(';'));
 
       let img = new Image();
 

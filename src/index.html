@@ -5,13 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
   <script src="https://revillweb.github.io/img-2/dist/img-2.js"></script>
+  <script type="application/javascript">
+    var filesquashConfig = {
+      projectId: 'e6b0c7ca',
+      domain: '[your domain]',
+      token: '[your token]'
+    }
+  </script>
   <script src="/build/filesquash.js"></script>
 </head>
 <body>
 
   <div>
     <h2>Exemplo: filesquash-widget</h2>
-    <filesquash-widget token="YOUR_TOKEN" id="widget"></filesquash-widget>
+    <filesquash-widget id="widget"></filesquash-widget>
   </div>
 
   <hr>
@@ -19,7 +26,7 @@
   <div>
     <h2>Exemplo: filesquash-modal</h2>
     <button onclick="showModal()">Exibir modal</button>
-    <filesquash-modal token="YOUR_TOKEN" id="modal"></filesquash-modal>
+    <filesquash-modal id="modal"></filesquash-modal>
   </div>
 
   <hr>
@@ -28,14 +35,12 @@
     <h2>Exemplo: filesquash-img</h2>
     <filesquash-img
       src="https://filesquash.io/static/myimage.jpg"
-      project-id="e6b0c7ca"
       filters="blur=10;mirror=true"
       id="image1"
     ></filesquash-img>
 
     <filesquash-img
       src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
-      project-id="e6b0c7ca"
       size="560x"
       progressive="false"
       filters="grayscale=true"

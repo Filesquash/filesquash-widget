@@ -33,7 +33,6 @@ declare global {
       'alt': string;
       'filters': string;
       'progressive': boolean;
-      'projectId': string;
       'reload': () => void;
       'size': string;
       'src': string;
@@ -64,7 +63,6 @@ declare global {
       'onImageError'?: (event: CustomEvent) => void;
       'onImageLoad'?: (event: CustomEvent) => void;
       'progressive'?: boolean;
-      'projectId'?: string;
       'size'?: string;
       'src'?: string;
     }
@@ -84,7 +82,6 @@ declare global {
       'selectedPdfPlaceholder': string;
       'selectedVideoPlaceholder': string;
       'toggleModal': () => void;
-      'token': string;
       'uploadButtonText': string;
     }
   }
@@ -116,7 +113,6 @@ declare global {
       'selectedFilesText'?: string;
       'selectedPdfPlaceholder'?: string;
       'selectedVideoPlaceholder'?: string;
-      'token'?: string;
       'uploadButtonText'?: string;
     }
   }
@@ -135,7 +131,6 @@ declare global {
       'selectedFilesText': string;
       'selectedPdfPlaceholder': string;
       'selectedVideoPlaceholder': string;
-      'token': string;
       'uploadButtonText': string;
     }
   }
@@ -168,7 +163,6 @@ declare global {
       'selectedFilesText'?: string;
       'selectedPdfPlaceholder'?: string;
       'selectedVideoPlaceholder'?: string;
-      'token'?: string;
       'uploadButtonText'?: string;
     }
   }

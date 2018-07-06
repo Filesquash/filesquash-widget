@@ -14,7 +14,6 @@ export class FilesquashWidget {
 
   @Event() uploadCompleted: EventEmitter;
 
-  @Prop() token: string;
   @Prop() multiple: boolean = true;
 
   @Prop() buttonText: string = 'Selecionar arquivos';
@@ -55,7 +54,6 @@ export class FilesquashWidget {
       <div class="filesquash-widget">
         <button type="button" class="btn" onClick={() => this.modal.toggleModal()}>{this.buttonText}</button>
         <filesquash-modal
-          token={this.token}
           multiple={this.multiple}
           label-text={this.labelText}
           upload-button-text={this.uploadButtonText}

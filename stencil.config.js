@@ -8,7 +8,8 @@ exports.config = {
   ],
   plugins: [
     sass()
-  ]
+  ],
+  globalScript: 'src/global/index.ts'
 };
 
 exports.devServer = {
