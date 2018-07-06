@@ -5,13 +5,33 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
 
 ### Via tag <script>
 
-- Adicione a tag  `<script src='https://unpkg.com/filesquash-widget@0.2.4/dist/filesquash.js'></script>` no <head> do seu index.html
+- Adicione o seguinte código antes de fechar a tag `<body>` de seu site:
+```html
+<script type="application/javascript">
+  var filesquashConfig = {
+    projectId: '[seu projectId]',
+    domain: '[seu domínio]',
+    token: '[seu token]'
+  }
+</script>
+<script src='https://unpkg.com/filesquash-widget@0.3.0/dist/filesquash.js'></script>
+```
 - Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
 
 ### NPM
 
 - Rode `npm install filesquash-widget --save`
-- Adicione uma tag script similar a `<script src='node_modules/filesquash-widget/dist/filesquash.js'></script>` o <head> do seu index.html
+- Adicione um código similar ao a seguir antes de fechar a tag `<body>` de seu site:
+```html
+<script type="application/javascript">
+  var filesquashConfig = {
+    projectId: '[seu projectId]',
+    domain: '[seu domínio]',
+    token: '[seu token]'
+  }
+</script>
+<script src='node_modules/filesquash-widget/dist/filesquash.js'></script>
+```
 - Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
 
 ---
@@ -22,17 +42,13 @@ O widget de imagens do Filesquash permite que você tenha imagens automaticament
 ### Exemplo:
 
 ```html
-  <filesquash-img
-    src="https://mysite.com/images/image.jpg"
-    project-id="YOUR_PROJECT_ID"
-  ></filesquash-img>
+  <filesquash-img src="https://mysite.com/images/image.jpg"></filesquash-img>
 ```
 
 ### Opções
 
 | Atributo | Valor padrão | Valores possíveis | Descrição |
 |---|:-:|:-:|---|
-| **project-id**  | | | Este atributo define o identificador único do seu projeto no Filesquash. <br /> **Atributo é obrigatório**. |
 | **src**  | | | Este atributo define o endereço URL da imagem ou identificador único de imagem no Filesquash. <br /> **Esse atributo é obrigatório**. |
 | **alt**  | | |  Este atributo define um texto alternativo que descreve a imagem. <br /> **Atributo é obrigatório**. |
 | **size** | `"w_auto"` | `"default"`, `"h_auto"`, `"w_auto"` e [mais](https://filesquash.gitbook.io/docs/) |  Este atributo define especifica o tamanho desejado da imagem. |
@@ -46,7 +62,7 @@ O widget de imagens do Filesquash permite que você tenha imagens automaticament
 ### Javascript (vanilla):
 
 ```html
-  <filesquash-widget token="SEU_TOKEN" id="widget"></filesquash-widget>
+  <filesquash-widget id="widget"></filesquash-widget>
 ```
 
 Para receber a URL de seu arquivo após o upload você deverá criar um listener para o evento `uploadCompleted`:
@@ -89,7 +105,6 @@ Caso queira acionar programaticamente o widget de upload do Filesquash, utilize 
 
 | Atributo | Valor padrão | Descrição |
 |---|:-:|---|
-| **token**  | | Este atributo define o token do seu projeto no Filesquash. <br /> **Atributo é obrigatório**. |
 | **multiple**  | `false` | Este atributo define se o usuário pode selecionar mais de um arquivo de forma simultânea. |
 | **button-text**  | `"Selecionar arquivos"` | Este atributo define o texto do botão de abertura do modal do widget. |
 | **label-text**  | `"Arraste/solte seu arquivo aqui."` | Este atributo define o texto da caixa de seleção de arquivos do widget. |
@@ -133,12 +148,12 @@ export class UploadWidget extends Component {
         [kebabCase(key)]: this.props[key]
       }), {})
     }
+    
     return (
       <filesquash-widget
         {...newProps}
         ref={this._handleRef}
-        token={this.props.token}
-        id='widget' />
+      />
     )
   }
 }
