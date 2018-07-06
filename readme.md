@@ -10,7 +10,6 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
 <script type="application/javascript">
   var filesquashConfig = {
     projectId: '[seu projectId]',
-    domain: '[seu domínio]',
     token: '[seu token]'
   }
 </script>
@@ -26,7 +25,6 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
 <script type="application/javascript">
   var filesquashConfig = {
     projectId: '[seu projectId]',
-    domain: '[seu domínio]',
     token: '[seu token]'
   }
 </script>
