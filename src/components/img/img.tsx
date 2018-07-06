@@ -18,7 +18,7 @@ export class MyComponent {
   @Prop() src: string;
   @Prop() projectId: string;
   @Prop() alt: string;
-  @Prop() size: string;
+  @Prop() size: string = "w_auto";
   @Prop() filters: string;
   @Prop() progressive: boolean = true;
 
@@ -49,12 +49,16 @@ export class MyComponent {
 
   @Listen('window:orientationchange')
   handleOrientationChange() {
-    this.throttledFetchImage()
+    if (this.size === 'w_auto' || this.size === 'h_auto') {
+      this.throttledFetchImage()
+    }
   }
 
   @Listen('window:resize')
   handleResize() {
-    this.throttledFetchImage()
+    if (this.size === 'w_auto' || this.size === 'h_auto') {
+      this.throttledFetchImage()
+    }
   }
 
   @Method()
@@ -84,6 +88,8 @@ export class MyComponent {
       return `${(this.hostElement.parentNode as HTMLElement).clientWidth}x`
       case 'h_auto':
       return `${(this.hostElement.parentNode as HTMLElement).clientHeight}x`
+      case 'default':
+      return null
       default:
       return size
     }
@@ -93,6 +99,7 @@ export class MyComponent {
     const blacklistedValues = ['grayscale'];
     const defaultFilters = ['quality=keep'];
     const userFilters = compact(filters.split(';'));
+    const sizeToApply = this.getImageSize(size)
     let processedFilters = `filters`;
     let crop = '';
     let mirror = '';
@@ -113,7 +120,7 @@ export class MyComponent {
       }
     })
 
-    return `${size ? (crop + mirror + this.getImageSize(size)) + '/': ''}${processedFilters}`;
+    return `${sizeToApply ? (crop + mirror + sizeToApply) + '/': ''}${processedFilters}`;
   }
 
   processExternalImage(src, projectId, size, filters) {
