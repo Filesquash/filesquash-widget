@@ -133,6 +133,7 @@ declare global {
       'selectedFilesText': string;
       'selectedPdfPlaceholder': string;
       'selectedVideoPlaceholder': string;
+      'token': string;
       'uploadButtonText': string;
     }
   }
@@ -165,6 +166,7 @@ declare global {
       'selectedFilesText'?: string;
       'selectedPdfPlaceholder'?: string;
       'selectedVideoPlaceholder'?: string;
+      'token'?: string;
       'uploadButtonText'?: string;
     }
   }
