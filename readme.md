@@ -13,7 +13,7 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
     token: '[seu token]'
   }
 </script>
-<script src='https://unpkg.com/filesquash-widget@0.3.2/dist/filesquash.js'></script>
+<script src='https://unpkg.com/filesquash-widget@0.4.0/dist/filesquash.js'></script>
 ```
 - Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
 
@@ -35,23 +35,48 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
 ---
 
 ## Widget de imagens
-O widget de imagens do Filesquash permite que você tenha imagens automaticamente responsiveis em seu site com o mínimo de esforço possível. Além disso, também é possível aplicar uma grande quantidade de efeitos efeitos, como blur, grayscale, watermark, etc..
+O widget de imagens do Filesquash permite que você tenha imagens automaticamente responsivas em seu site com o mínimo de esforço possível. Além disso, também é possível aplicar uma grande quantidade de efeitos efeitos, como blur, grayscale, watermark, etc..
 
 ### Exemplo:
 
 ```html
-  <filesquash-img src="https://mysite.com/images/image.jpg"></filesquash-img>
+  <img
+    data-fs-src="https://mysite.com/images/image.jpg"
+    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8+f9vPQAJZAN2rlRQVAAAAABJRU5ErkJggg=="
+  />
 ```
 
 ### Opções
 
 | Atributo | Valor padrão | Valores possíveis | Descrição |
 |---|:-:|:-:|---|
-| **src**  | | | Este atributo define o endereço URL da imagem ou identificador único de imagem no Filesquash. <br /> **Esse atributo é obrigatório**. |
-| **alt**  | | |  Este atributo define um texto alternativo que descreve a imagem. <br /> **Atributo é obrigatório**. |
-| **size** | `"w_auto"` | `"default"`, `"h_auto"`, `"w_auto"` e [mais](https://filesquash.gitbook.io/docs/) |  Este atributo define especifica o tamanho desejado da imagem. |
-| **filters** | | [Mais informações](https://filesquash.gitbook.io/docs/) | Este atributo define os filtros que serão aplicados a imagem. |
-| **progressive** | `true` | `true` ou `false` | Este atributo define se a imagem será carregada de forma progressiva usando placeholder de baixa resolução (LQIP). |
+| **data-fs-src**  | | | Este atributo define o endereço URL da imagem ou identificador único de imagem no Filesquash. <br /> **Esse atributo é obrigatório**. |
+| **data-fs-size** | `"w_auto"` | `"default"`, `"h_auto"`, `"w_auto"` e [mais](https://filesquash.gitbook.io/docs/) |  Este atributo especifica o tamanho desejado da imagem. |
+| **data-fs-filters** | | [Mais informações](https://filesquash.gitbook.io/docs/) | Este atributo define os filtros que serão aplicados a imagem. |
+| **data-fs-progressive** | `true` | `true` ou `false` | Este atributo define se a imagem será carregada de forma progressiva usando placeholder de baixa resolução (LQIP). |
+
+---
+
+## Widget de imagens em background
+O widget de imagens do Filesquash também permite que você tenha imagens em background automaticamente responsivas.
+
+### Exemplo:
+
+```html
+  <div
+    data-fs-bg="https://mysite.com/images/image.jpg"
+    style="width:100%; height: 500px;"
+  ></div>
+```
+
+### Opções
+
+| Atributo | Valor padrão | Valores possíveis | Descrição |
+|---|:-:|:-:|---|
+| **data-fs-bg**  | | | Este atributo define o endereço URL da imagem ou identificador único de imagem no Filesquash. <br /> **Esse atributo é obrigatório**. |
+| **data-fs-size** | `"w_auto"` | `"default"`, `"h_auto"`, `"w_auto"` e [mais](https://filesquash.gitbook.io/docs/) |  Este atributo especifica o tamanho desejado da imagem. |
+| **data-fs-filters** | | [Mais informações](https://filesquash.gitbook.io/docs/) | Este atributo define os filtros que serão aplicados a imagem. |
+| **data-fs-progressive** | `true` | `true` ou `false` | Este atributo define se a imagem será carregada de forma progressiva usando placeholder de baixa resolução (LQIP). |
 
 ---
 
