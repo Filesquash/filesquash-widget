@@ -29,50 +29,6 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface FilesquashImg {
-      'alt': string;
-      'filters': string;
-      'progressive': boolean;
-      'reload': () => Promise<void>;
-      'size': string;
-      'src': string;
-    }
-  }
-
-  interface HTMLFilesquashImgElement extends StencilComponents.FilesquashImg, HTMLStencilElement {}
-
-  var HTMLFilesquashImgElement: {
-    prototype: HTMLFilesquashImgElement;
-    new (): HTMLFilesquashImgElement;
-  };
-  interface HTMLElementTagNameMap {
-    'filesquash-img': HTMLFilesquashImgElement;
-  }
-  interface ElementTagNameMap {
-    'filesquash-img': HTMLFilesquashImgElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'filesquash-img': JSXElements.FilesquashImgAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface FilesquashImgAttributes extends HTMLAttributes {
-      'alt'?: string;
-      'filters'?: string;
-      'onImageError'?: (event: CustomEvent) => void;
-      'onImageLoad'?: (event: CustomEvent) => void;
-      'progressive'?: boolean;
-      'size'?: string;
-      'src'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
     interface FilesquashModal {
       'labelText': string;
       'localFilesTitle': string;

@@ -32,19 +32,33 @@
   <hr>
 
   <div>
-    <h2>Exemplo: filesquash-img</h2>
-    <filesquash-img
-      src="https://filesquash.io/static/myimage.jpg"
-      filters="blur=10;mirror=true"
-      id="image1"
-    ></filesquash-img>
-
-    <filesquash-img
-      src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
-      size="560x"
-      progressive="false"
-      filters="grayscale=true"
-    ></filesquash-img>
+    <div>
+      <h2>Exemplo: filesquash-img com imagens externas</h2>
+      <img
+        src="https://i.stack.imgur.com/181Qp.gif"
+        data-fs-src="https://filesquash.io/static/myimage.jpg"
+        data-fs-filters="blur=10"
+        data-fs-progressive="false"
+        id="dataImg"
+      >
+    </div>
+    <div>
+      <h2>Exemplo: filesquash-img com imagens armazenadas no Filesquash</h2>
+      <img
+        src="https://i.stack.imgur.com/181Qp.gif"
+        data-fs-src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
+        data-fs-filters="grayscale=true"
+        data-fs-size="560x"
+      >
+    </div>
+    <div>
+      <h2>Exemplo: filesquash-img com imagens em background</h2>
+      <div
+        style="width:100%; height: 500px;"
+        data-fs-bg="https://filesquash.io/static/myimage.jpg"
+        data-fs-filters="blur=10;mirror=true"
+      ></div>
+    </div>
   </div>
 
   <script>
@@ -58,7 +72,6 @@
         )
       });
 
-    document.addEventListener('filesquash:uploadStarted', function(e) { console.log('filesquash:uploadStarted', e) });
     document.addEventListener('filesquash:uploadCompleted', function(e) { console.log('filesquash:uploadCompleted', e) });
 
     // Exemplo: filesquash-modal
@@ -76,18 +89,12 @@
     }
 
     // Exemplo: filesquash-img
-    const image1Elm = document.querySelector('#image1');
-    image1Elm.componentOnReady()
-      .then(() => {
-        image1Elm.addEventListener(
-          'imageLoad',
-          console.log
-        )
+    document.addEventListener('filesquash:imageLoaded', function(e) { console.log('filesquash:imageLoaded', e) });
+    const dataImg = document.querySelector('#dataImg');
 
-        setTimeout(() => {
-          image1Elm.filters = 'blur=10;mirror=true;grayscale=true'
-        }, 5000)
-      });
+    setTimeout(() => {
+      dataImg.dataset.fsFilters = `${dataImg.dataset.fsFilters};mirror=true`
+    }, 5000)
   </script>
 </body>
 </html>
