@@ -12,9 +12,9 @@ interface CustomHTMLElement extends HTMLElement {
 async function supportsWebp() {
   if (!self.createImageBitmap) return false;
 
-  const webpData =
-    "data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=";
-  const blob = await fetch(webpData).then(r => r.blob());
+  const blob = await fetch(
+    "data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA="
+  ).then(r => r.blob());
   return createImageBitmap(blob).then(() => true, () => false);
 }
 
@@ -47,7 +47,6 @@ function getImageSize(target, size) {
 }
 
 async function getFilters(target, filters, size, hasWebSupport) {
-  const blacklistedValues = ["grayscale"];
   const defaultFilters = ["quality=keep"];
   const userFilters = compact(filters.split(";"));
   const sizeToApply = getImageSize(target, size);
@@ -59,11 +58,10 @@ async function getFilters(target, filters, size, hasWebSupport) {
     defaultFilters.push("format=webp");
   }
 
-  const uniqFilters = uniqBy([...userFilters, ...defaultFilters], key =>
+  // Unique Filters
+  uniqBy([...userFilters, ...defaultFilters], key =>
     key.replace(/=.*$/, "")
-  );
-
-  uniqFilters.forEach(filter => {
+  ).forEach(filter => {
     const [property, value] = filter.split("=");
 
     if (property === "mirror") {
@@ -72,7 +70,7 @@ async function getFilters(target, filters, size, hasWebSupport) {
       crop = value ? value + "/" : "";
     } else {
       processedFilters += `:${property}(${
-        blacklistedValues.indexOf(property) === -1 ? value : ""
+        ["grayscale"].indexOf(property) === -1 ? value : "" // Blacklisted values
       })`;
     }
   });
@@ -119,14 +117,14 @@ async function processHostedImage(
       )}/${encodeURIComponent(target.dataset[datasetKey])}`;
 }
 
-async function getImage(
+async function getImage({
   target,
   datasetKey,
   projectId,
   size,
   filters,
   hasWebSupport
-): Promise<string> {
+}): Promise<string> {
   const uuidV4Checker = new RegExp(
     /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i
   );
@@ -157,34 +155,22 @@ async function getImage(
       );
 }
 
-async function getPlaceholderImage(
-  target,
-  datasetKey,
-  projectId,
-  size,
-  filters,
-  hasWebSupport
-): Promise<string> {
-  const userFilters = compact(filters.split(";"));
-  const placeholderFilters = ["quality=50", "blur=40"];
+async function getPlaceholderImage(opts): Promise<string> {
+  const uniqFilters = uniqBy(
+    ["quality=50", "blur=40", ...compact(opts.filters.split(";"))],
+    key => key.replace(/=.*$/, "")
+  );
 
-  const uniqFilters = uniqBy([...placeholderFilters, ...userFilters], key =>
-    key.replace(/=.*$/, "")
-  );
-  const processedImage: string = await getImage(
-    target,
-    datasetKey,
-    projectId,
-    size,
-    uniqFilters.join(";"),
-    hasWebSupport
-  );
+  const processedImage: string = await getImage({
+    ...opts,
+    filters: uniqFilters.join(";")
+  });
 
   return fetchImage(processedImage).then(loadedImage => {
-    if (datasetKey === "fsSrc") {
-      target.src = loadedImage;
-    } else if (datasetKey === "fsBg") {
-      target.style.backgroundImage = `url("${loadedImage}")`;
+    if (opts.datasetKey === "fsSrc") {
+      opts.target.setAttribute("src", loadedImage);
+    } else if (opts.datasetKey === "fsBg") {
+      opts.target.style.backgroundImage = `url("${loadedImage}")`;
     }
 
     return loadedImage;
@@ -214,12 +200,13 @@ function recursivelyTraverseAddedNodes(itemsToLoad, element) {
 
 function applyProcessedImage(target, datasetKey, processedImage) {
   return fetchImage(processedImage).then(() => {
-    const event = new CustomEvent("filesquash:imageLoaded", {
-      bubbles: true,
-      cancelable: true,
-      detail: { image: processedImage }
-    });
-    target.dispatchEvent(event);
+    target.dispatchEvent(
+      new CustomEvent("filesquash:imageLoaded", {
+        bubbles: true,
+        cancelable: true,
+        detail: { image: processedImage }
+      })
+    );
 
     if (datasetKey === "fsSrc") {
       target.src = processedImage;
@@ -231,36 +218,24 @@ function applyProcessedImage(target, datasetKey, processedImage) {
 
 function fetchImages(itemsToLoad, hasWebSupport) {
   itemsToLoad.forEach(target => {
-    const {
-      fsSize = "w_auto",
-      fsFilters = "",
-      fsProgressive = "true"
-    } = target.dataset;
+    const imageOpts = {
+      target,
+      projectId: filesquashConfig.projectId,
+      size: target.dataset.fsSize || "w_auto",
+      filters: target.dataset.fsFilters || "",
+      progressive: target.dataset.fsProgressive || "true",
+      datasetKey: target.nodeName === "IMG" ? "fsSrc" : "fsBg",
+      hasWebSupport
+    };
 
-    const datasetKey = target.nodeName === "IMG" ? "fsSrc" : "fsBg";
-
-    (fsProgressive === "true"
-      ? getPlaceholderImage(
-          target,
-          datasetKey,
-          filesquashConfig.projectId,
-          fsSize,
-          fsFilters,
-          hasWebSupport
-        )
+    (imageOpts.progressive === "true"
+      ? getPlaceholderImage(imageOpts)
       : Promise.resolve("")
     )
       .then(() => {
-        getImage(
-          target,
-          datasetKey,
-          filesquashConfig.projectId,
-          fsSize,
-          fsFilters,
-          hasWebSupport
-        )
+        getImage(imageOpts)
           .then(processedImage =>
-            applyProcessedImage(target, datasetKey, processedImage)
+            applyProcessedImage(target, imageOpts.datasetKey, processedImage)
           )
           .catch(console.log);
       })
@@ -268,58 +243,46 @@ function fetchImages(itemsToLoad, hasWebSupport) {
   });
 }
 
-async function ready() {
-  const hasWebSupport = await supportsWebp();
-  const imgsToLoad = document.querySelectorAll("[data-fs-src]");
-  fetchImages(imgsToLoad, hasWebSupport);
+(function ready() {
+  supportsWebp()
+    .then(hasWebSupport => {
+      fetchImages(document.querySelectorAll("[data-fs-src]"), hasWebSupport);
+      fetchImages(document.querySelectorAll("[data-fs-bg]"), hasWebSupport);
 
-  const backgroundsToLoad = document.querySelectorAll("[data-fs-bg]");
-  fetchImages(backgroundsToLoad, hasWebSupport);
+      new MutationObserver(mutations => {
+        const itemsToLoad = [];
 
-  const mutationObserver = new MutationObserver(mutations => {
-    const itemsToLoad = [];
-    const fsAttributes = [
-      "data-fs-src",
-      "data-fs-bg",
-      "data-fs-size",
-      "data-fs-filters"
-    ];
-
-    mutations.forEach(mutation => {
-      const target = mutation.target as CustomHTMLElement;
-      if (
-        "attributes" !== mutation.type ||
-        fsAttributes.indexOf(mutation.attributeName) === -1
-      ) {
-        if ("childList" === mutation.type) {
-          Array.from(mutation.addedNodes).forEach(node => {
-            recursivelyTraverseAddedNodes(itemsToLoad, node);
-          });
-        }
-      } else {
-        if (target.filesquashData && target.filesquashData.newNode) {
-          target.filesquashData.newNode = false;
-        } else {
-          (target.dataset.fsSrc ||
-            target.dataset.fsBg ||
-            target.dataset.fsSize ||
-            target.dataset.fsFilters) &&
-            itemsToLoad.push(target);
-        }
-      }
-    });
-    itemsToLoad.length > 0 && fetchImages(itemsToLoad, hasWebSupport);
-  });
-
-  mutationObserver.observe(document.getElementsByTagName("body")[0], {
-    childList: true,
-    subtree: true,
-    attributes: true
-  });
-}
-
-if (document.readyState !== "loading") {
-  ready().catch(console.log);
-} else {
-  document.addEventListener("DOMContentLoaded", ready);
-}
+        mutations.forEach(mutation => {
+          const target = mutation.target as CustomHTMLElement;
+          if (
+            "attributes" !== mutation.type ||
+            [
+              "data-fs-src",
+              "data-fs-bg",
+              "data-fs-size",
+              "data-fs-filters"
+            ].indexOf(mutation.attributeName) === -1
+          ) {
+            if ("childList" === mutation.type) {
+              Array.from(mutation.addedNodes).forEach(node => {
+                recursivelyTraverseAddedNodes(itemsToLoad, node);
+              });
+            }
+          } else {
+            if (target.filesquashData && target.filesquashData.newNode) {
+              target.filesquashData.newNode = false;
+            } else {
+              (target.dataset.fsSrc || target.dataset.fsBg) &&
+                itemsToLoad.push(target);
+            }
+          }
+        });
+        itemsToLoad.length > 0 && fetchImages(itemsToLoad, hasWebSupport);
+      }).observe(document.getElementsByTagName("body")[0], {
+        childList: true,
+        subtree: true,
+        attributes: true
+      });
+    })
+    .catch(console.log);
+})();
