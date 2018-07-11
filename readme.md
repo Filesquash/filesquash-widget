@@ -54,6 +54,7 @@ O widget de imagens do Filesquash permite que você tenha imagens automaticament
 | **data-fs-size** | `"w_auto"` | `"default"`, `"h_auto"`, `"w_auto"` e [mais](https://filesquash.gitbook.io/docs/) |  Este atributo especifica o tamanho desejado da imagem. |
 | **data-fs-filters** | | [Mais informações](https://filesquash.gitbook.io/docs/) | Este atributo define os filtros que serão aplicados a imagem. |
 | **data-fs-progressive** | `true` | `true` ou `false` | Este atributo define se a imagem será carregada de forma progressiva usando placeholder de baixa resolução (LQIP). |
+| **data-fs-auto-webp** | `false` | `true` ou `false` | Este atributo define se a imagem será carregada no formato webp quando o navegador apresentar suporte. <br /> **A conversão para webp pode resultar em perda de qualidad das imagens**. |
 
 ---
 
@@ -77,6 +78,7 @@ O widget de imagens do Filesquash também permite que você tenha imagens em bac
 | **data-fs-size** | `"w_auto"` | `"default"`, `"h_auto"`, `"w_auto"` e [mais](https://filesquash.gitbook.io/docs/) |  Este atributo especifica o tamanho desejado da imagem. |
 | **data-fs-filters** | | [Mais informações](https://filesquash.gitbook.io/docs/) | Este atributo define os filtros que serão aplicados a imagem. |
 | **data-fs-progressive** | `true` | `true` ou `false` | Este atributo define se a imagem será carregada de forma progressiva usando placeholder de baixa resolução (LQIP). |
+| **data-fs-auto-webp** | `false` | `true` ou `false` | Este atributo define se a imagem será carregada no formato webp quando o navegador apresentar suporte. <br /> **A conversão para webp pode resultar em perda de qualidad das imagens**. |
 
 ---
 

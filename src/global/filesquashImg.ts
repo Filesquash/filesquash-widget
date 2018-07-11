@@ -46,7 +46,7 @@ function getImageSize(target, size) {
   }
 }
 
-async function getFilters(target, filters, size, hasWebSupport) {
+async function getFilters(target, filters, size, preferWebp) {
   const defaultFilters = ["quality=keep"];
   const userFilters = compact(filters.split(";"));
   const sizeToApply = getImageSize(target, size);
@@ -54,7 +54,7 @@ async function getFilters(target, filters, size, hasWebSupport) {
   let crop = "";
   let mirror = "";
 
-  if (hasWebSupport) {
+  if (preferWebp) {
     defaultFilters.push("format=webp");
   }
 
@@ -86,13 +86,13 @@ async function processExternalImage(
   projectId,
   size,
   filters,
-  hasWebSupport
+  preferWebp
 ) {
   return `https://filesquash.io/v1/${projectId}/process/${await getFilters(
     target,
     filters,
     size,
-    hasWebSupport
+    preferWebp
   )}/${encodeURIComponent(target.dataset[datasetKey])}`;
 }
 
@@ -102,18 +102,18 @@ async function processHostedImage(
   projectId,
   size,
   filters,
-  hasWebSupport,
+  preferWebp,
   onlyUuid
 ) {
   return onlyUuid
     ? `https://filesquash.io/v1/${projectId}/assets/${
         target.dataset[datasetKey]
-      }/${await getFilters(target, filters, size, hasWebSupport)}`
+      }/${await getFilters(target, filters, size, preferWebp)}`
     : `${target.dataset[datasetKey]}/${getFilters(
         target,
         filters,
         size,
-        hasWebSupport
+        preferWebp
       )}/${encodeURIComponent(target.dataset[datasetKey])}`;
 }
 
@@ -123,7 +123,7 @@ async function getImage({
   projectId,
   size,
   filters,
-  hasWebSupport
+  preferWebp
 }): Promise<string> {
   const uuidV4Checker = new RegExp(
     /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i
@@ -142,7 +142,7 @@ async function getImage({
         projectId,
         size,
         filters,
-        hasWebSupport,
+        preferWebp,
         onlyUuid
       )
     : await processExternalImage(
@@ -151,7 +151,7 @@ async function getImage({
         projectId,
         size,
         filters,
-        hasWebSupport
+        preferWebp
       );
 }
 
@@ -225,7 +225,7 @@ function fetchImages(itemsToLoad, hasWebSupport) {
       filters: target.dataset.fsFilters || "",
       progressive: target.dataset.fsProgressive || "true",
       datasetKey: target.nodeName === "IMG" ? "fsSrc" : "fsBg",
-      hasWebSupport
+      preferWebp: hasWebSupport && target.dataset.fsAutoWebp === "true"
     };
 
     (imageOpts.progressive === "true"
