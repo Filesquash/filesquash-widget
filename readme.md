@@ -13,7 +13,7 @@ Este é um conjunto de web componentes criados para interagir com a API do [File
     token: '[seu token]'
   }
 </script>
-<script src='https://unpkg.com/filesquash-widget@0.4.2/dist/filesquash.js'></script>
+<script src='https://unpkg.com/filesquash-widget@0.4.4/dist/filesquash.js'></script>
 ```
 - Pronto. Agora você já pode usar os componentes em qualquer lugar no seu template, jsx, html, etc.
 
