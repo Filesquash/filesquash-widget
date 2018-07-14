@@ -88,7 +88,7 @@ async function processExternalImage(
   filters,
   preferWebp
 ) {
-  return `https://filesquash.io/v1/${projectId}/process/${await getFilters(
+  return `https://api.filesquash.io/v1/${projectId}/process/${await getFilters(
     target,
     filters,
     size,
@@ -106,7 +106,7 @@ async function processHostedImage(
   onlyUuid
 ) {
   return onlyUuid
-    ? `https://filesquash.io/v1/${projectId}/assets/${
+    ? `https://api.filesquash.io/v1/${projectId}/assets/${
         target.dataset[datasetKey]
       }/${await getFilters(target, filters, size, preferWebp)}`
     : `${target.dataset[datasetKey]}/${getFilters(

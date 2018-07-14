@@ -89,7 +89,7 @@ export class FilesquashModal {
     const body = new FormData();
     body.append("asset[file]", file);
 
-    return fetch("https://filesquash.io/v1/assets", {
+    return fetch("https://api.filesquash.io/v1/assets", {
       method: "POST",
       body,
       headers: {
