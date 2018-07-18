@@ -19,20 +19,22 @@ filesquash-modal {
   }
 
   .modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    min-height: 100%;
-    left: 0;
     background: rgba(0, 0, 0, 0.6);
-    overflow: hidden;
-    overflow-y: auto;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
-    z-index: 9;
+
+    @media only screen and (min-width: 640px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   .modal-content {
@@ -44,10 +46,27 @@ filesquash-modal {
     position: relative;
     width: 100%;
     max-width: 640px;
+
+    &.has-items {
+      padding-bottom: 16px;
+    }
   }
 
   .title {
     font-size: 16px;
+  }
+
+  .filesquash-bottom {
+    background: #fff;
+    position: absolute;
+    width: 100%;
+    padding: 16px;
+    bottom: 0;
+    margin-left: -16px;
+
+    > .btn {
+      width: 100%;
+    }
   }
 
   .btn {
@@ -166,7 +185,6 @@ filesquash-modal {
       cursor: pointer;
     }
   }
-
 
   /* .preview {
     display: inline-block;

@@ -44,6 +44,7 @@ export class FilesquashModal {
 
   @State() modalVisible = false;
   @State() selectedFiles: Array<{ file: File; base64: string }> = [];
+  @State() filesValue = null;
 
   @Method()
   toggleModal(): void {
@@ -72,6 +73,7 @@ export class FilesquashModal {
         };
         reader.readAsDataURL(file);
       });
+      this.filesValue = null;
     }
   }
 
@@ -157,7 +159,12 @@ export class FilesquashModal {
   render() {
     return this.modalVisible ? (
       <div class="modal" onClick={this.toggleModal.bind(this)}>
-        <div class="modal-content" onClick={this.noop.bind(this)}>
+        <div
+          class={`modal-content ${
+            this.selectedFiles.length > 0 ? "has-items" : ""
+          }`}
+          onClick={this.noop.bind(this)}
+        >
           <h2 class="title">{this.localFilesTitle}&nbsp;</h2>
           <button
             type="button"
@@ -174,6 +181,7 @@ export class FilesquashModal {
               <input
                 type="file"
                 class="file-upload"
+                value={this.filesValue}
                 onChange={(e: any) => this.readFile(e.target.files)}
                 multiple={this.multiple}
               />
@@ -186,18 +194,20 @@ export class FilesquashModal {
                 this.renderFilePreview(file, index)
               )}
             </div>,
-            <button
-              type="button"
-              class="btn"
-              onClick={() =>
-                this.upload(
-                  this.selectedFiles,
-                  this.token || this.filesquashConfig.token
-                )
-              }
-            >
-              {this.uploadButtonText}
-            </button>
+            <div class="filesquash-bottom">
+              <button
+                type="button"
+                class="btn"
+                onClick={() =>
+                  this.upload(
+                    this.selectedFiles,
+                    this.token || this.filesquashConfig.token
+                  )
+                }
+              >
+                {this.uploadButtonText}
+              </button>
+            </div>
           ]}
         </div>
       </div>
