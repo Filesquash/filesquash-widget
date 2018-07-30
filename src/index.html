@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html dir="ltr"
+  lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
   <script src="https://revillweb.github.io/img-2/dist/img-2.js"></script>
   <script type="application/javascript">
@@ -14,6 +17,7 @@
   </script>
   <script src="/build/filesquash.js"></script>
 </head>
+
 <body>
 
   <div>
@@ -34,31 +38,25 @@
   <div>
     <div>
       <h2>Exemplo: filesquash-img com imagens externas</h2>
-      <img
-        src="https://i.stack.imgur.com/181Qp.gif"
+      <img src="https://i.stack.imgur.com/181Qp.gif"
         data-fs-src="https://filesquash.io/static/myimage.jpg"
         data-fs-filters="blur=10"
         data-fs-progressive="false"
         data-fs-auto-webp="true"
-        id="dataImg"
-      />
+        id="dataImg" />
     </div>
     <div>
       <h2>Exemplo: filesquash-img com imagens armazenadas no Filesquash</h2>
-      <img
-        src="https://i.stack.imgur.com/181Qp.gif"
+      <img src="https://i.stack.imgur.com/181Qp.gif"
         data-fs-src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
         data-fs-filters="grayscale=true"
-        data-fs-size="560x"
-      />
+        data-fs-size="560x" />
     </div>
     <div>
       <h2>Exemplo: filesquash-img com imagens em background</h2>
-      <div
-        style="width:100%; height: 500px;"
+      <div style="width:100%; height: 500px;"
         data-fs-bg="https://filesquash.io/static/myimage.jpg"
-        data-fs-filters="blur=10;mirror=true"
-      ></div>
+        data-fs-filters="blur=10;mirror=true"></div>
     </div>
   </div>
 
@@ -73,7 +71,7 @@
         )
       });
 
-    document.addEventListener('filesquash:uploadCompleted', function(e) { console.log('filesquash:uploadCompleted', e) });
+    document.addEventListener('filesquash:uploadCompleted', function (e) { console.log('filesquash:uploadCompleted', e) });
 
     // Exemplo: filesquash-modal
     const modalElm = document.querySelector('#modal');
@@ -90,7 +88,7 @@
     }
 
     // Exemplo: filesquash-img
-    document.addEventListener('filesquash:imageLoaded', function(e) { console.log('filesquash:imageLoaded', e) });
+    document.addEventListener('filesquash:imageLoaded', function (e) { console.log('filesquash:imageLoaded', e) });
     const dataImg = document.querySelector('#dataImg');
 
     setTimeout(() => {
@@ -98,4 +96,5 @@
     }, 5000)
   </script>
 </body>
+
 </html>
