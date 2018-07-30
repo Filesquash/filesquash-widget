@@ -35,10 +35,10 @@ function fetchImage(src): Promise<string> {
 
 function getImageSize(target, size) {
   switch (size) {
-    case "w_auto":
-      return `${(target.parentNode as HTMLElement).clientWidth}x`;
-    case "h_auto":
-      return `${(target.parentNode as HTMLElement).clientHeight}x`;
+    case "auto":
+      return `${(target.parentNode as HTMLElement).clientWidth}x${
+        (target.parentNode as HTMLElement).clientHeight
+      }`;
     case "default":
       return null;
     default:
@@ -88,12 +88,18 @@ async function processExternalImage(
   filters,
   preferWebp
 ) {
+  const imageURL = target.dataset[datasetKey];
+  const noProtocolRegex = /^\/\//i;
   return `https://api.filesquash.io/v1/${projectId}/process/${await getFilters(
     target,
     filters,
     size,
     preferWebp
-  )}/${encodeURIComponent(target.dataset[datasetKey])}`;
+  )}/${encodeURIComponent(
+    noProtocolRegex.test(imageURL)
+      ? `${document.location.protocol}${imageURL}`
+      : imageURL
+  )}`;
 }
 
 async function processHostedImage(
@@ -221,7 +227,7 @@ function fetchImages(itemsToLoad, hasWebSupport) {
     const imageOpts = {
       target,
       projectId: filesquashConfig.projectId,
-      size: target.dataset.fsSize || "w_auto",
+      size: target.dataset.fsSize || "auto",
       filters: target.dataset.fsFilters || "",
       progressive: target.dataset.fsProgressive || "true",
       datasetKey: target.nodeName === "IMG" ? "fsSrc" : "fsBg",
