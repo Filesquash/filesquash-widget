@@ -34,11 +34,11 @@ function fetchImage(src): Promise<string> {
 }
 
 function getImageSize(target, size) {
+  const width =
+    target.clientWidth <= 1 ? window.innerWidth : target.clientWidth;
   switch (size) {
     case "auto":
-      return `${(target.parentNode as HTMLElement).clientWidth}x${
-        (target.parentNode as HTMLElement).clientHeight
-      }`;
+      return `${width}x`;
     case "default":
       return null;
     default:
@@ -47,7 +47,7 @@ function getImageSize(target, size) {
 }
 
 async function getFilters(target, filters, size, preferWebp) {
-  const defaultFilters = ["quality=keep"];
+  const defaultFilters = ["quality=keep", "no_upscale=true"];
   const userFilters = compact(filters.split(";"));
   const sizeToApply = getImageSize(target, size);
   let processedFilters = `filters`;
@@ -70,7 +70,9 @@ async function getFilters(target, filters, size, preferWebp) {
       crop = value ? value + "/" : "";
     } else {
       processedFilters += `:${property}(${
-        ["grayscale"].indexOf(property) === -1 ? value : "" // Blacklisted values
+        ["grayscale", "no_upscale", "upscale"].indexOf(property) === -1
+          ? value
+          : "" // Blacklisted values
       })`;
     }
   });
