@@ -1,6 +1,7 @@
 import compact from "lodash/compact";
 import uniqBy from "lodash/uniqBy";
 
+import "./intersection-observer.js";
 import filesquashConfig from "./filesquashConfig";
 
 interface CustomHTMLElement extends HTMLElement {
