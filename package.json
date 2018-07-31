@@ -1,6 +1,6 @@
 {
   "name": "filesquash-widget",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -24,7 +24,7 @@
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "@stencil/core": "0.9.11",
+    "@stencil/core": "0.11.0-0",
     "@stencil/dev-server": "latest",
     "@stencil/utils": "latest",
     "@types/jest": "^21.1.1",
