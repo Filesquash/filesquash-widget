@@ -11,8 +11,3 @@ exports.config = {
   ],
   globalScript: 'src/global/index.ts'
 };
-
-exports.devServer = {
-  root: 'www',
-  watchGlob: '**/**'
-}
