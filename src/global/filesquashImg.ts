@@ -34,11 +34,11 @@ function fetchImage(src): Promise<string> {
 }
 
 function getImageSize(target, size) {
-  const width =
-    target.clientWidth <= 1 ? window.innerWidth : target.clientWidth;
   switch (size) {
     case "auto":
-      return `${width}x`;
+      return `${
+        target.clientWidth <= 1 ? window.innerWidth : target.clientWidth
+      }x`;
     case "default":
       return null;
     default:
@@ -96,14 +96,13 @@ async function processExternalImage(
   preferWebp
 ) {
   const imageURL = target.dataset[datasetKey];
-  const noProtocolRegex = /^\/\//i;
   return `https://api.filesquash.io/v1/${projectId}/process/${await getFilters(
     target,
     filters,
     size,
     preferWebp
   )}/${encodeURIComponent(
-    noProtocolRegex.test(imageURL)
+    /^\/\//i.test(imageURL) // No protocol test
       ? `${document.location.protocol}${imageURL}`
       : imageURL
   )}`;
@@ -138,15 +137,12 @@ async function mapImageURL({
   filters,
   preferWebp
 }): Promise<string> {
-  const uuidV4Checker = new RegExp(
-    /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i
+  const onlyUuid = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}/i.test(
+    target.dataset[datasetKey]
   );
-  const targetedAssetChecker = new RegExp(
-    /^(http|https):\/\/filesquash\.io\/[0-9A-Z]{8}\/assets\//i
+  const targetedAsset = /^(http|https):\/\/filesquash\.io\/[0-9A-Z]{8}\/assets\//i.test(
+    target.dataset[datasetKey]
   );
-
-  const onlyUuid = uuidV4Checker.test(target.dataset[datasetKey]);
-  const targetedAsset = targetedAssetChecker.test(target.dataset[datasetKey]);
 
   return targetedAsset || onlyUuid
     ? await processHostedImage(
@@ -248,19 +244,19 @@ function fetchImages(itemsToLoad, hasWebSupport) {
       images => {
         images.forEach(image => {
           if (image.intersectionRatio > 0) {
-            const target = image.target as HTMLElement;
-            const datasetKey = target.nodeName === "IMG" ? "fsSrc" : "fsBg";
+            const datasetKey =
+              image.target.nodeName === "IMG" ? "fsSrc" : "fsBg";
 
             transformImage(
-              target,
+              image.target,
               datasetKey,
               hasWebSupport,
               processedImage => {
-                observer.unobserve(target);
+                observer.unobserve(image.target);
 
                 fetchImage(processedImage)
                   .then(() => {
-                    target.dispatchEvent(
+                    image.target.dispatchEvent(
                       new CustomEvent("filesquash:imageLoaded", {
                         bubbles: true,
                         cancelable: true,
@@ -268,7 +264,11 @@ function fetchImages(itemsToLoad, hasWebSupport) {
                       })
                     );
 
-                    applyProcessedImage(target, datasetKey, processedImage);
+                    applyProcessedImage(
+                      image.target,
+                      datasetKey,
+                      processedImage
+                    );
                   })
                   .catch(console.log);
               }
