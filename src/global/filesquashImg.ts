@@ -47,7 +47,7 @@ function getImageSize(target, size) {
 }
 
 async function getFilters(target, filters, size, preferWebp) {
-  const defaultFilters = ["quality=keep", "no_upscale=true"];
+  const defaultFilters = ["quality=keep"];
   const userFilters = compact(filters.split(";"));
   const sizeToApply = getImageSize(target, size);
   let processedFilters = `filters`;
@@ -58,8 +58,12 @@ async function getFilters(target, filters, size, preferWebp) {
     defaultFilters.push("format=webp");
   }
 
+  if (userFilters.indexOf("upscale=true") === -1) {
+    defaultFilters.push("no_upscale=true");
+  }
+
   // Unique Filters
-  uniqBy([...userFilters, ...defaultFilters], key =>
+  uniqBy([...defaultFilters, ...userFilters], key =>
     key.replace(/=.*$/, "")
   ).forEach(filter => {
     const [property, value] = filter.split("=");
@@ -70,9 +74,10 @@ async function getFilters(target, filters, size, preferWebp) {
       crop = value ? value + "/" : "";
     } else {
       processedFilters += `:${property}(${
-        ["grayscale", "no_upscale", "upscale"].indexOf(property) === -1
+        ["grayscale", "no_upscale", "upscale"] // Blacklisted values
+          .indexOf(property) === -1
           ? value
-          : "" // Blacklisted values
+          : ""
       })`;
     }
   });
@@ -125,7 +130,7 @@ async function processHostedImage(
       )}/${encodeURIComponent(target.dataset[datasetKey])}`;
 }
 
-async function getImage({
+async function mapImageURL({
   target,
   datasetKey,
   projectId,
@@ -169,7 +174,7 @@ async function getPlaceholderImage(opts): Promise<string> {
     key => key.replace(/=.*$/, "")
   );
 
-  const processedImage: string = await getImage({
+  const processedImage: string = await mapImageURL({
     ...opts,
     filters: uniqFilters.join(";")
   });
@@ -207,47 +212,77 @@ function recursivelyTraverseAddedNodes(itemsToLoad, element) {
 }
 
 function applyProcessedImage(target, datasetKey, processedImage) {
-  return fetchImage(processedImage).then(() => {
-    target.dispatchEvent(
-      new CustomEvent("filesquash:imageLoaded", {
-        bubbles: true,
-        cancelable: true,
-        detail: { image: processedImage }
-      })
-    );
+  if (datasetKey === "fsSrc") {
+    target.src = processedImage;
+  } else if (datasetKey === "fsBg") {
+    target.style.backgroundImage = `url("${processedImage}")`;
+  }
+}
 
-    if (datasetKey === "fsSrc") {
-      target.src = processedImage;
-    } else if (datasetKey === "fsBg") {
-      target.style.backgroundImage = `url("${processedImage}")`;
-    }
-  });
+function transformImage(target, datasetKey, hasWebSupport, onLoad) {
+  const imageOpts = {
+    target,
+    projectId: filesquashConfig.projectId,
+    size: target.dataset.fsSize || "auto",
+    filters: target.dataset.fsFilters || "",
+    progressive: target.dataset.fsProgressive || "true",
+    datasetKey,
+    preferWebp: hasWebSupport && target.dataset.fsAutoWebp === "true"
+  };
+
+  (imageOpts.progressive === "true"
+    ? getPlaceholderImage(imageOpts)
+    : Promise.resolve("")
+  )
+    .then(() => {
+      mapImageURL(imageOpts)
+        .then(onLoad)
+        .catch(console.log);
+    })
+    .catch(console.log);
 }
 
 function fetchImages(itemsToLoad, hasWebSupport) {
-  itemsToLoad.forEach(target => {
-    const imageOpts = {
-      target,
-      projectId: filesquashConfig.projectId,
-      size: target.dataset.fsSize || "auto",
-      filters: target.dataset.fsFilters || "",
-      progressive: target.dataset.fsProgressive || "true",
-      datasetKey: target.nodeName === "IMG" ? "fsSrc" : "fsBg",
-      preferWebp: hasWebSupport && target.dataset.fsAutoWebp === "true"
-    };
+  itemsToLoad.forEach(imageElement => {
+    const observer = new IntersectionObserver(
+      images => {
+        images.forEach(image => {
+          if (image.intersectionRatio > 0) {
+            const target = image.target as HTMLElement;
+            const datasetKey = target.nodeName === "IMG" ? "fsSrc" : "fsBg";
 
-    (imageOpts.progressive === "true"
-      ? getPlaceholderImage(imageOpts)
-      : Promise.resolve("")
-    )
-      .then(() => {
-        getImage(imageOpts)
-          .then(processedImage =>
-            applyProcessedImage(target, imageOpts.datasetKey, processedImage)
-          )
-          .catch(console.log);
-      })
-      .catch(console.log);
+            transformImage(
+              target,
+              datasetKey,
+              hasWebSupport,
+              processedImage => {
+                observer.unobserve(target);
+
+                fetchImage(processedImage)
+                  .then(() => {
+                    target.dispatchEvent(
+                      new CustomEvent("filesquash:imageLoaded", {
+                        bubbles: true,
+                        cancelable: true,
+                        detail: { image: processedImage }
+                      })
+                    );
+
+                    applyProcessedImage(target, datasetKey, processedImage);
+                  })
+                  .catch(console.log);
+              }
+            );
+          }
+        });
+      },
+      {
+        rootMargin: "0px",
+        threshold: 0.1
+      }
+    );
+
+    observer.observe(imageElement);
   });
 }
 
