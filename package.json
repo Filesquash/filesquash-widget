@@ -19,12 +19,12 @@
     "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "@stencil/sass": "0.0.5",
+    "@stencil/sass": "0.1.0",
     "decko": "^1.2.0",
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "@stencil/core": "0.11.0-0",
+    "@stencil/core": "0.11.1",
     "@types/jest": "^21.1.1",
     "jest": "^21.2.1",
     "pre-commit": "1.2.2",
