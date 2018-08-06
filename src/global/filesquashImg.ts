@@ -19,7 +19,7 @@ async function supportsWebp() {
   return createImageBitmap(blob).then(() => true, () => false);
 }
 
-function fetchImage(src): Promise<string> {
+function fetchImage(src: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image();
 
@@ -176,15 +176,15 @@ async function getPlaceholderImage(opts): Promise<string> {
     filters: uniqFilters.join(";")
   });
 
-  return fetchImage(processedImage).then(loadedImage => {
-    if (opts.datasetKey === "fsSrc") {
-      opts.target.setAttribute("src", loadedImage);
-    } else if (opts.datasetKey === "fsBg") {
-      opts.target.style.backgroundImage = `url("${loadedImage}")`;
-    }
+  const loadedImage = await fetchImage(processedImage);
 
-    return loadedImage;
-  });
+  if (opts.datasetKey === "fsSrc") {
+    opts.target.setAttribute("src", loadedImage);
+  } else if (opts.datasetKey === "fsBg") {
+    opts.target.style.backgroundImage = `url("${loadedImage}")`;
+  }
+
+  return loadedImage;
 }
 
 function recursivelyTraverseAddedNodes(itemsToLoad, element) {
@@ -216,7 +216,7 @@ function applyProcessedImage(target, datasetKey, processedImage) {
   }
 }
 
-function transformImage(target, datasetKey, hasWebSupport, onLoad) {
+async function transformImage(target, datasetKey, hasWebSupport, onLoad) {
   const imageOpts = {
     target,
     projectId: filesquashConfig.projectId,
@@ -227,15 +227,16 @@ function transformImage(target, datasetKey, hasWebSupport, onLoad) {
     preferWebp: hasWebSupport && target.dataset.fsAutoWebp === "true"
   };
 
-  (imageOpts.progressive === "true"
-    ? getPlaceholderImage(imageOpts)
-    : Promise.resolve("")
-  )
-    .then(() => {
-      mapImageURL(imageOpts)
-        .then(onLoad)
-        .catch(console.log);
-    })
+  try {
+    if (imageOpts.progressive === "true") {
+      await getPlaceholderImage(imageOpts);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  mapImageURL(imageOpts)
+    .then(onLoad)
     .catch(console.log);
 }
 
@@ -252,26 +253,38 @@ function fetchImages(itemsToLoad, hasWebSupport) {
               image.target,
               datasetKey,
               hasWebSupport,
-              processedImage => {
+              async processedImage => {
                 observer.unobserve(image.target);
 
-                fetchImage(processedImage)
-                  .then(() => {
-                    image.target.dispatchEvent(
-                      new CustomEvent("filesquash:imageLoaded", {
-                        bubbles: true,
-                        cancelable: true,
-                        detail: { image: processedImage }
-                      })
-                    );
+                let loadedImage;
+                try {
+                  loadedImage = await fetchImage(processedImage);
 
-                    applyProcessedImage(
-                      image.target,
-                      datasetKey,
-                      processedImage
-                    );
-                  })
-                  .catch(console.log);
+                  image.target.dispatchEvent(
+                    new CustomEvent("filesquash:imageLoaded", {
+                      bubbles: true,
+                      cancelable: true,
+                      detail: { image: loadedImage }
+                    })
+                  );
+                } catch (error) {
+                  loadedImage = (image.target as HTMLElement).dataset[
+                    datasetKey
+                  ];
+
+                  image.target.dispatchEvent(
+                    new CustomEvent("filesquash:imageLoadError", {
+                      bubbles: true,
+                      cancelable: true,
+                      detail: {
+                        error:
+                          "Failed to process image on Filesquash. As fallback, we loaded the original image. Contact us for more infos."
+                      }
+                    })
+                  );
+                }
+
+                applyProcessedImage(image.target, datasetKey, loadedImage);
               }
             );
           }

@@ -39,26 +39,26 @@
     <div style="display: flex; min-height: 100vh;">
       <h2>Exemplo: filesquash-img com imagens externas</h2>
       <div style="flex: 0 0 25%; margin-left: 32px;">
-        <img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8+f9vPQAJZAN2rlRQVAAAAABJRU5ErkJggg=="
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8+f9vPQAJZAN2rlRQVAAAAABJRU5ErkJggg=="
+
           data-fs-src="https://filesquash.io/static/myimage.jpg"
           data-fs-filters="blur=10"
           data-fs-progressive="false"
           data-fs-auto-webp="true"
-          id="dataImg"
-        />
+          id="dataImg" />
       </div>
     </div>
     <div>
       <h2>Exemplo: filesquash-img com imagens armazenadas no Filesquash</h2>
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8+f9vPQAJZAN2rlRQVAAAAABJRU5ErkJggg=="
+
         data-fs-src="f6d59861-9a27-4ae1-bce0-f9d6e225a865"
         data-fs-filters="grayscale=true"
         data-fs-size="560x" />
     </div>
     <div>
       <h2>Exemplo: filesquash-img com imagens em background</h2>
-      <div style="width:100%; height: 500px;"
+      <div style="width:100%; height: 500px;background-size: cover;"
         data-fs-bg="https://filesquash.io/static/myimage.jpg"
         data-fs-filters="blur=10;mirror=true;upscale=true"></div>
     </div>
@@ -93,6 +93,7 @@
 
     // Exemplo: filesquash-img
     document.addEventListener('filesquash:imageLoaded', function (e) { console.log('filesquash:imageLoaded', e) });
+    document.addEventListener('filesquash:imageLoadError', function (e) { console.log('filesquash:imageLoadError', e) });
     const dataImg = document.querySelector('#dataImg');
 
     setTimeout(() => {
