@@ -86,7 +86,7 @@ async function getFilters(target, filters, size, preferWebp) {
     if (property === "mirror") {
       mirror = value ? "-" : "";
     } else if (property === "crop") {
-      crop = value ? value + "/" : "";
+      crop = value || crop;
     } else {
       processedFilters += `:${property}(${
         ["grayscale", "no_upscale", "upscale"] // Blacklisted values
@@ -97,7 +97,8 @@ async function getFilters(target, filters, size, preferWebp) {
     }
   });
 
-  const urlFragments = [crop + mirror + sizeToApply, "smart", processedFilters];
+  const urlFragments = [mirror + sizeToApply, "smart", processedFilters];
+  if (crop) urlFragments.unshift(crop);
 
   return `${urlFragments.join("/")}`;
 }
