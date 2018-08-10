@@ -97,9 +97,9 @@ async function getFilters(target, filters, size, preferWebp) {
     }
   });
 
-  return `${sizeToApply ? crop + mirror + sizeToApply + "/" : ""}${
-    processedFilters
-  }`;
+  const urlFragments = [crop + mirror + sizeToApply, "smart", processedFilters];
+
+  return `${urlFragments.join("/")}`;
 }
 
 async function processExternalImage(

@@ -40,10 +40,10 @@
       <h2>Exemplo: filesquash-img com imagens externas</h2>
       <div style="flex: 0 0 25%; margin-left: 32px;">
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
-          data-fs-src="https://filesquash.io/static/myimage.jpg"
-          data-fs-filters="blur=10"
+          data-fs-src="http://homepages.cae.wisc.edu/~ece533/images/barbara.png"
           data-fs-progressive="false"
           data-fs-auto-webp="true"
+          data-fs-size="400x150"
           id="dataImg" />
       </div>
     </div>
@@ -95,7 +95,7 @@
     const dataImg = document.querySelector('#dataImg');
 
     setTimeout(() => {
-      dataImg.dataset.fsFilters = `${dataImg.dataset.fsFilters};grayscale=true`
+      dataImg.dataset.fsFilters = `${dataImg.dataset.fsFilters || ''};blur=2`
     }, 5000)
   </script>
 </body>
