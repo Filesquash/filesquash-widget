@@ -10,6 +10,19 @@ interface CustomHTMLElement extends HTMLElement {
   };
 }
 
+// @TODO: Impelementar filtro no backend para retornar imagens retina caso essa função retorne true
+// function isRetinaDisplay() {
+//   if (window.devicePixelRatio > 1) return true;
+//   if (
+//     window.matchMedia &&
+//     window.matchMedia(
+//       "(-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-resolution: 1.5dppx)"
+//     ).matches
+//   )
+//     return true;
+//   return false;
+// }
+
 async function supportsWebp() {
   if (!self.createImageBitmap) return false;
 
@@ -35,11 +48,12 @@ function fetchImage(src: string): Promise<string> {
 }
 
 function getImageSize(target, size) {
+  const width =
+    target.clientWidth <= 1 ? window.innerWidth : target.clientWidth;
+  const ratio = window.devicePixelRatio || 1;
   switch (size) {
     case "auto":
-      return `${
-        target.clientWidth <= 1 ? window.innerWidth : target.clientWidth
-      }x`;
+      return `${width * ratio}x`;
     case "default":
       return null;
     default:
